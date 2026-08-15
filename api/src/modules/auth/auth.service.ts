@@ -26,7 +26,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (!existingUser) {
+    if (existingUser != null) {
       throw new ConflictException('Người dùng đã tồn tại!');
     }
     try {
@@ -139,14 +139,14 @@ export class AuthService {
     });
   }
   //Login
-  async login(loginDto: LoginDto) { 
+  async login(loginDto: LoginDto) {
     const { email, password } = loginDto;
     const user = await this.prisma.user.findUnique({
       where: {
         email,
       },
     });
-    if (!user || (await bcrypt.compare(password, user.password))) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Email hoac mat khau khong dung');
     }
     const tokens = await this.generateTokens(user.id, user.email);

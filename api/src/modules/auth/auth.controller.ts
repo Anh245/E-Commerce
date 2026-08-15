@@ -100,7 +100,7 @@ export class AuthController {
   }
 
   //LogOut and invalidate refresh token
-  @Post('Log')
+  @Post('logout')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Log out',

@@ -14,7 +14,7 @@ export class RefreshToKenStrategy extends PassportStrategy(
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET as string,
+      secretOrKey: process.env.JWT_SECRET || 'dev-secret-change-me',
       passReqToCallback: true,
     });
   }

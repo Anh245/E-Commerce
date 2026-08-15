@@ -6,7 +6,14 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), PrismaModule, AuthModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
+    }),
+    PrismaModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
