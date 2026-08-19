@@ -146,7 +146,7 @@ export class AuthService {
         email,
       },
     });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user || !(await bcrypt.compare(password!, user.password))) {
       throw new UnauthorizedException('Email hoac mat khau khong dung');
     }
     const tokens = await this.generateTokens(user.id, user.email);

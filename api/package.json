@@ -47,6 +47,7 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.0.0",
@@ -90,6 +91,7 @@
     "prisma@7.9.1": true,
     "file:../src/generated/prisma": true,
     "@prisma/engines@7.9.1": true,
-    "unrs-resolver@1.12.2": true
+    "unrs-resolver@1.12.2": true,
+    "@scarf/scarf@1.4.0": true
   }
 }
