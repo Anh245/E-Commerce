@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateCategoryDto {
   @ApiProperty({
@@ -24,6 +31,30 @@ export class CreateCategoryDto {
 
   @ApiProperty({
     example: 'electronics',
+    description: 'The URL-friendly slug for the category',
+    required: false,
+    maxLength: 100,
   })
   slug?: string;
+
+  @ApiProperty({
+    example: 'https://Anh.com/images/tv.png',
+    description: 'URL of image category',
+    required: false,
+    maxLength: 255,
+  })
+  @IsString()
+  @IsOptional()
+  @MaxLength(255)
+  imageUrl?: string;
+
+  @ApiProperty({
+    example: true,
+    description: 'Indicates if the category is active',
+    required: false,
+    default: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  isActive?: boolean;
 }
