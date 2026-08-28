@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -25,6 +26,8 @@ export class CreateProductDto {
     example: ' the device is manufactured By Apple',
     required: false,
   })
+  @IsString()
+  @IsOptional()
   description: string;
 
   @ApiProperty({
@@ -84,5 +87,7 @@ export class CreateProductDto {
     required: false,
     example: true,
   })
+  @IsBoolean()
+  @IsOptional()
   isActive?: boolean;
 }

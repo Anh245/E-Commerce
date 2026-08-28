@@ -75,7 +75,7 @@ export class ProductsService {
     if (!existingProduct) {
       throw new NotFoundException('Product not found!');
     }
-    if (updateProductDto.sku && updateProductDto.sku !== existingProduct.sku) {
+    if (updateProductDto && updateProductDto.sku !== existingProduct.sku) {
       const skuTaken = await this.prismaService.product.findUnique({
         where: {
           sku: updateProductDto.sku,
@@ -91,7 +91,7 @@ export class ProductsService {
 
     const updateData: any = { ...updateProductDto };
 
-    if (updateProductDto.price !== undefined) {
+    if (updateProductDto && updateProductDto.price !== undefined) {
       updateData.price = new Prisma.Decimal(updateProductDto.price);
     }
 
