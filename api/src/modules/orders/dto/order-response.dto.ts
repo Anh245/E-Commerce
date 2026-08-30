@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { OrderItem } from 'prisma-client/client';
+import { OrderItem, OrderStatus } from 'prisma-client/client';
 
 export class OrderApiResponseDto<T> {
   @ApiProperty({
@@ -58,6 +58,8 @@ export class OrderResponseDto {
   total: number;
 
   @ApiProperty()
+  status: OrderStatus;
+  @ApiProperty()
   shippingAddress: string;
 
   @ApiProperty({
@@ -70,4 +72,19 @@ export class OrderResponseDto {
 
   @ApiProperty()
   updatedAt: Date;
+}
+
+export class PaginatedOrderResponseDto {
+  @ApiProperty({
+    type: [OrderResponseDto],
+  })
+  data: OrderResponseDto[];
+
+  @ApiProperty()
+  total: number;
+
+  @ApiProperty()
+  page: number;
+  @ApiProperty()
+  limit: number;
 }
