@@ -9971,6 +9971,8 @@ export namespace Prisma {
     paymentMethod: string | null
     transactionId: string | null
     orderId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type PaymentMaxAggregateOutputType = {
@@ -9982,6 +9984,8 @@ export namespace Prisma {
     paymentMethod: string | null
     transactionId: string | null
     orderId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type PaymentCountAggregateOutputType = {
@@ -9993,6 +9997,8 @@ export namespace Prisma {
     paymentMethod: number
     transactionId: number
     orderId: number
+    createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -10014,6 +10020,8 @@ export namespace Prisma {
     paymentMethod?: true
     transactionId?: true
     orderId?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type PaymentMaxAggregateInputType = {
@@ -10025,6 +10033,8 @@ export namespace Prisma {
     paymentMethod?: true
     transactionId?: true
     orderId?: true
+    createdAt?: true
+    updatedAt?: true
   }
 
   export type PaymentCountAggregateInputType = {
@@ -10036,6 +10046,8 @@ export namespace Prisma {
     paymentMethod?: true
     transactionId?: true
     orderId?: true
+    createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -10134,6 +10146,8 @@ export namespace Prisma {
     paymentMethod: string | null
     transactionId: string | null
     orderId: string
+    createdAt: Date
+    updatedAt: Date
     _count: PaymentCountAggregateOutputType | null
     _avg: PaymentAvgAggregateOutputType | null
     _sum: PaymentSumAggregateOutputType | null
@@ -10164,6 +10178,8 @@ export namespace Prisma {
     paymentMethod?: boolean
     transactionId?: boolean
     orderId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
@@ -10177,6 +10193,8 @@ export namespace Prisma {
     paymentMethod?: boolean
     transactionId?: boolean
     orderId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
@@ -10190,6 +10208,8 @@ export namespace Prisma {
     paymentMethod?: boolean
     transactionId?: boolean
     orderId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["payment"]>
@@ -10203,9 +10223,11 @@ export namespace Prisma {
     paymentMethod?: boolean
     transactionId?: boolean
     orderId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "currency" | "paymentMethod" | "transactionId" | "orderId", ExtArgs["result"]["payment"]>
+  export type PaymentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "status" | "currency" | "paymentMethod" | "transactionId" | "orderId" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
   export type PaymentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
@@ -10234,6 +10256,8 @@ export namespace Prisma {
       paymentMethod: string | null
       transactionId: string | null
       orderId: string
+      createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["payment"]>
     composites: {}
   }
@@ -10667,6 +10691,8 @@ export namespace Prisma {
     readonly paymentMethod: FieldRef<"Payment", 'String'>
     readonly transactionId: FieldRef<"Payment", 'String'>
     readonly orderId: FieldRef<"Payment", 'String'>
+    readonly createdAt: FieldRef<"Payment", 'DateTime'>
+    readonly updatedAt: FieldRef<"Payment", 'DateTime'>
   }
     
 
@@ -11205,7 +11231,9 @@ export namespace Prisma {
     currency: 'currency',
     paymentMethod: 'paymentMethod',
     transactionId: 'transactionId',
-    orderId: 'orderId'
+    orderId: 'orderId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
@@ -11901,6 +11929,8 @@ export namespace Prisma {
     paymentMethod?: StringNullableFilter<"Payment"> | string | null
     transactionId?: StringNullableFilter<"Payment"> | string | null
     orderId?: StringFilter<"Payment"> | string
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -11914,6 +11944,8 @@ export namespace Prisma {
     paymentMethod?: SortOrderInput | SortOrder
     transactionId?: SortOrderInput | SortOrder
     orderId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     order?: OrderOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
@@ -11930,6 +11962,8 @@ export namespace Prisma {
     currency?: StringFilter<"Payment"> | string
     paymentMethod?: StringNullableFilter<"Payment"> | string | null
     transactionId?: StringNullableFilter<"Payment"> | string | null
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id" | "orderId">
@@ -11943,6 +11977,8 @@ export namespace Prisma {
     paymentMethod?: SortOrderInput | SortOrder
     transactionId?: SortOrderInput | SortOrder
     orderId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: PaymentCountOrderByAggregateInput
     _avg?: PaymentAvgOrderByAggregateInput
     _max?: PaymentMaxOrderByAggregateInput
@@ -11962,6 +11998,8 @@ export namespace Prisma {
     paymentMethod?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     transactionId?: StringNullableWithAggregatesFilter<"Payment"> | string | null
     orderId?: StringWithAggregatesFilter<"Payment"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Payment"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -12535,6 +12573,8 @@ export namespace Prisma {
     currency?: string
     paymentMethod?: string | null
     transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     order: OrderCreateNestedOneWithoutPaymentsInput
     user: UserCreateNestedOneWithoutPaymentsInput
   }
@@ -12548,6 +12588,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     transactionId?: string | null
     orderId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PaymentUpdateInput = {
@@ -12557,6 +12599,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutPaymentsNestedInput
     user?: UserUpdateOneRequiredWithoutPaymentsNestedInput
   }
@@ -12570,6 +12614,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentCreateManyInput = {
@@ -12581,6 +12627,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     transactionId?: string | null
     orderId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PaymentUpdateManyMutationInput = {
@@ -12590,6 +12638,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUncheckedUpdateManyInput = {
@@ -12601,6 +12651,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -13180,6 +13232,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     transactionId?: SortOrder
     orderId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PaymentAvgOrderByAggregateInput = {
@@ -13195,6 +13249,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     transactionId?: SortOrder
     orderId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PaymentMinOrderByAggregateInput = {
@@ -13206,6 +13262,8 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     transactionId?: SortOrder
     orderId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type PaymentSumOrderByAggregateInput = {
@@ -14120,6 +14178,8 @@ export namespace Prisma {
     currency?: string
     paymentMethod?: string | null
     transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     order: OrderCreateNestedOneWithoutPaymentsInput
   }
 
@@ -14131,6 +14191,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     transactionId?: string | null
     orderId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PaymentCreateOrConnectWithoutUserInput = {
@@ -14229,6 +14291,8 @@ export namespace Prisma {
     paymentMethod?: StringNullableFilter<"Payment"> | string | null
     transactionId?: StringNullableFilter<"Payment"> | string | null
     orderId?: StringFilter<"Payment"> | string
+    createdAt?: DateTimeFilter<"Payment"> | Date | string
+    updatedAt?: DateTimeFilter<"Payment"> | Date | string
   }
 
   export type CartItemCreateWithoutProductInput = {
@@ -14838,6 +14902,8 @@ export namespace Prisma {
     currency?: string
     paymentMethod?: string | null
     transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
     user: UserCreateNestedOneWithoutPaymentsInput
   }
 
@@ -14849,6 +14915,8 @@ export namespace Prisma {
     currency?: string
     paymentMethod?: string | null
     transactionId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type PaymentCreateOrConnectWithoutOrderInput = {
@@ -14958,6 +15026,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPaymentsNestedInput
   }
 
@@ -14969,6 +15039,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartItemCreateWithoutCartInput = {
@@ -15303,6 +15375,8 @@ export namespace Prisma {
     paymentMethod?: string | null
     transactionId?: string | null
     orderId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type CartUpdateWithoutUserInput = {
@@ -15374,6 +15448,8 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     order?: OrderUpdateOneRequiredWithoutPaymentsNestedInput
   }
 
@@ -15385,6 +15461,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PaymentUncheckedUpdateManyWithoutUserInput = {
@@ -15395,6 +15473,8 @@ export namespace Prisma {
     paymentMethod?: NullableStringFieldUpdateOperationsInput | string | null
     transactionId?: NullableStringFieldUpdateOperationsInput | string | null
     orderId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CartItemCreateManyProductInput = {

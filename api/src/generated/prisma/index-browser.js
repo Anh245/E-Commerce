@@ -204,7 +204,9 @@ exports.Prisma.PaymentScalarFieldEnum = {
   currency: 'currency',
   paymentMethod: 'paymentMethod',
   transactionId: 'transactionId',
-  orderId: 'orderId'
+  orderId: 'orderId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {

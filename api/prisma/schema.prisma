@@ -141,6 +141,8 @@ model Payment {
   order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
   user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@index([userId])
   @@index([orderId])
   @@index([transactionId])

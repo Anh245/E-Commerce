@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { CreatePaymentIntentDto } from './create-payment-intent.dto';
 
 export class PaymentResponseDto {
   @ApiProperty({
@@ -63,18 +64,35 @@ export class CreatePaymentIntentResponse {
   })
   paymentId: string;
 }
-export class PaymentApiResponse {
+export class CreatePaymentIntentApiResponseDto {
   @ApiProperty({
     example: true,
   })
   success: boolean;
 
   @ApiProperty({
-    type: CreatePaymentIntentResponse,
+    type: PaymentResponseDto,
+  })
+  data: CreatePaymentIntentDto;
+  @ApiProperty({
+    example: 'payment intent created successfully',
+    required: false,
+  })
+  message: string;
+}
+
+export class PaymentApiResponseDto {
+  @ApiProperty({
+    example: true,
+  })
+  success: boolean;
+
+  @ApiProperty({
+    type: CreatePaymentIntentApiResponseDto,
   })
   data: PaymentResponseDto;
   @ApiProperty({
-    example: 'payment intent create successfully',
+    example: 'Payment retrieved successfully',
     required: false,
   })
   message: string;
