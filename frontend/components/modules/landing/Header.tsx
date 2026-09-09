@@ -3,16 +3,27 @@ import React from "react";
 import styles from "./header.module.scss";
 import Link from "next/dist/client/link";
 import { LayoutDashboard, ShoppingCart } from "lucide-react";
+import { useCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 const Header = () => {
-  const isAuthenticated = true; // Replace with your authentication logic
-  const totalItems = 4; // Replace with your logic to get the total items in the cart
-
+  const { isAuthenticated, isLoading, user, logout } = useAuth(); // Replace with your authentication logic
+  const { totalItems } = useCart(); // Replace with your logic to get the total items in the cart
+  const router = useRouter();
   const handleDashboardClick = () => {
-    console.log("Dashboard clicked");
+    if (user && user.role == "ADMIN") {
+      router.push("/admin");
+    } else {
+      router.push("/user");
+    }
   };
 
-  const handleLogoutClick = () => {
-    console.log("Logout clicked");
+  const handleLogoutClick = async () => {
+    await logout();
+  };
+
+  const handleLoginClick = () => {
+    router.push("/auth/login");
   };
   return (
     <header className={styles.header}>
@@ -36,12 +47,22 @@ const Header = () => {
               <button
                 onClick={handleLogoutClick}
                 className={styles.logoutButton}
+                disabled={isLoading}
               >
-                Logout
+                {isLoading ? "Logging out..." : "Logout"}
               </button>
             </>
           ) : (
-            <></>
+            <>
+              {/* <LayoutDashboard onClick={handleDashboardClick} /> */}
+              <button
+                onClick={handleLoginClick}
+                className={styles.logoutButton}
+                disabled={isLoading}
+              >
+                {isLoading ? "is loading..." : "Login"}
+              </button>
+            </>
           )}
         </div>
       </div>

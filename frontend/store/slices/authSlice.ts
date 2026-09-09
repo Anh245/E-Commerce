@@ -1,5 +1,6 @@
 import { User } from "@/types/auth.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { actionAsyncStorage } from "next/dist/client/components/server-async-storage";
 
 export interface AuthState {
   accessToken: string | null;
@@ -18,7 +19,18 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
 
-  reducers: {},
+  reducers: {
+    setAccessToken(state, action: PayloadAction<string>) {
+      state.accessToken = action.payload;
+    },
+
+    clearAuth(state) {
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.user = null;
+      state.isAuthenticated = false;
+    },
+  },
 });
-export const {} = authSlice.actions;
+export const { setAccessToken, clearAuth } = authSlice.actions;
 export default authSlice.reducer;

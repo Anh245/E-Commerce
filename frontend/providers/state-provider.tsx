@@ -1,3 +1,4 @@
+"use client";
 import { persistor, store } from "../store";
 import React from "react";
 import { Provider } from "react-redux";
