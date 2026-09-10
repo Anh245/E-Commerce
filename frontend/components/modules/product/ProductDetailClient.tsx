@@ -1,12 +1,20 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Breadcrumbs from "./Breadcrumbs";
+import { useProducts } from "@/hooks/useProducts";
 
-const ProductDetailClient = () => {
+const ProductDetailClient = ({ productId }: { productId: string }) => {
+  const { getProduct, product } = useProducts();
+
+  useEffect(() => {
+    if (productId) {
+      getProduct(productId);
+    }
+  }, [productId, getProduct]);
   return (
     <>
-      <Breadcrumbs />
+      <Breadcrumbs productName={product!.name} />
     </>
   );
 };

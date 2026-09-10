@@ -6,12 +6,15 @@ import React from "react";
 
 // Nextjs ISR caching strategy
 export const revalidate = false;
-
-export default function Page() {
+interface PageProps {
+  params: Promise<{ id: string }>;
+}
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
   return (
     <>
       <Header />
-      <ProductDetailClient />
+      <ProductDetailClient productId={id} />
       <Footer />
     </>
   );

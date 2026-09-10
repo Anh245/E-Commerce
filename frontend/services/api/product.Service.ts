@@ -1,4 +1,8 @@
-import { ProductQueryParams, ProductsResponse } from "@/types/product.types";
+import {
+  Product,
+  ProductQueryParams,
+  ProductsResponse,
+} from "@/types/product.types";
 import { apiClient } from "./axios.config";
 
 export class ProductService {
@@ -11,6 +15,10 @@ export class ProductService {
       params,
     });
 
+    return response.data;
+  }
+  static async getProductById(id: string): Promise<Product> {
+    const response = await apiClient.get<Product>(`${this.ENPOINT}/${id}`);
     return response.data;
   }
 }
