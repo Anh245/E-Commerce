@@ -27,4 +27,66 @@
       transition: transform 0.3 ease;
     }
   }
+
+  .content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+
+    .category {
+      font-size: 0.75rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05rem;
+      font-weight: 500;
+    }
+
+    .name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #000;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-boc-orient: vertical;
+      overflow: hidden;
+      line-clamp: 2;
+    }
+
+    .description {
+      font-size: 0.875rem;
+      color: #737373;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-boc-orient: vertical;
+      overflow: hidden;
+      line-clamp: 2;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+
+      .price {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #000;
+      }
+
+      .stock {
+        font-size: 0.75rem;
+        color: #16a34a;
+        font-weight: 500;
+
+        &.outOfStock {
+          color: #dc2626;
+        }
+      }
+    }
+  }
 }

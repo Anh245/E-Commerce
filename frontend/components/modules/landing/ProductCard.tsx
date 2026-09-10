@@ -6,6 +6,8 @@ import styles from "./product-card.module.scss";
 import Image from "next/image";
 const ProductCard = ({ product }: { product: Product }) => {
   const id = product.id;
+  const isInStock = product.stock > 0;
+
   return (
     <Link href={`/${id}`} className={styles.card}>
       <div className={styles.imageWrapper}></div>
@@ -22,7 +24,17 @@ const ProductCard = ({ product }: { product: Product }) => {
           height={400}
           loading="lazy"
         />
-        <span>{product.name}</span>
+        <span className={styles.category}>{product.category}</span>
+        <h3 className={styles.name}>{product.name}</h3>
+        <p className={styles.description}>{product.description}</p>
+        <div className={styles.footer}>
+          <span className={styles.prices}>{product.price.toFixed(2)}</span>
+          <span
+            className={`${styles.stock} ${!isInStock ? styles.outOfStock : ""}`}
+          >
+            {isInStock ? product.stock + "In stock" : " Out of Stock"}
+          </span>
+        </div>
       </div>
     </Link>
   );

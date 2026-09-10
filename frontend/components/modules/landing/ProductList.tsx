@@ -27,6 +27,18 @@ const ProductList = () => {
     },
     [],
   );
+
+  const handlePrevPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (meta && page < meta.totalPages) {
+      setPage(page + 1);
+    }
+  };
   return (
     <section className={styles.section}>
       <div className={styles.container}>
@@ -52,11 +64,33 @@ const ProductList = () => {
               : "No available"}
           </div>
         ) : (
-          <div className={styles.grid}>
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            <div className={styles.grid}>
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Phan trang */}
+            {meta && meta.totalPages > 1 && (
+              <div className={styles.pagination}>
+                <button onClick={handlePrevPage} disabled={page === 1}>
+                  Trước
+                </button>
+
+                <span className={styles.pageInfo}>
+                  Trang {page} of {meta.totalPages}
+                </span>
+
+                <button
+                  onClick={handleNextPage}
+                  disabled={page >= meta.totalPages}
+                >
+                  Kế tiếp
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>

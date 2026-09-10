@@ -9,7 +9,7 @@ export interface Product {
   stock: number;
   sku: string;
   imageUrl: string;
-  category: Category;
+  category: string;
 }
 
 export interface ProductQueryParams {
