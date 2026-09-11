@@ -29,7 +29,7 @@ const storageEngine =
 const persistConfig = {
   key: "root",
   storage: storageEngine,
-  whitelist: [], // Specify which reducers to persist
+  whitelist: ["cart"], // Specify which reducers to persist
 };
 const rootReducer = combineReducers({
   auth: authReducer,

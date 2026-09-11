@@ -6,10 +6,12 @@ export interface Product {
   description: string;
   price: number;
   //   imageUrl: string;
+  quantity: number;
   stock: number;
   sku: string;
   imageUrl: string;
   category: string;
+  categoryId: string;
 }
 
 export interface ProductQueryParams {
