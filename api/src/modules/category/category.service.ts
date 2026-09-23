@@ -7,7 +7,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryResponseDto } from './dto/response-category.dto';
-import { Category, Prisma } from 'prisma-client/client';
+import { Category, Prisma } from '@prisma/client';
 import { QueryCategoryDto } from './dto/query-category.dto';
 import { skip } from 'node:test';
 import { UpdateCategoryDto } from './dto/update-category.dto';

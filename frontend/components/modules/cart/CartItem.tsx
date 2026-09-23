@@ -10,17 +10,32 @@ import Image from "next/image";
 import { instrumentParamsForClientValidation } from "next/dist/client/components/instant-samples";
 import { Trash2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
+import { toast } from "react-toastify";
 
 const CartItem = ({ item }: { item: CartItemType }) => {
-  const { decrementProductQuantity } = useCart();
+  const {
+    decrementProductQuantity,
+    incrementProductQuantity,
+    removeProductFromCart,
+  } = useCart();
   const { product, quantity } = item;
   const itemTotal = product.price * quantity;
 
   const handleDecrement = async () => {
     await decrementProductQuantity(product.id);
   };
-  const handleIncrement = () => {};
-  const handleRemove = () => {};
+  const handleIncrement = async () => {
+    if (quantity < product.stock) {
+      await incrementProductQuantity(product.id);
+    } else {
+      toast.error(`Only ${product.stock} items available in stock`);
+    }
+  };
+  const handleRemove = async () => {
+    if (window.confirm(`Remove ${product.name} from cart? `)) {
+      await removeProductFromCart(product.id);
+    }
+  };
 
   return (
     <div className={styles.cartItem}>
@@ -50,7 +65,7 @@ const CartItem = ({ item }: { item: CartItemType }) => {
           )}
         </div>
 
-        <div className={styles.action}>
+        <div className={styles.actions}>
           <div className={styles.quantityControl}>
             <button
               className={styles.quantityButton}

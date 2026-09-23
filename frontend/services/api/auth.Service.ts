@@ -1,3 +1,4 @@
+import { AuthResponse, LoginCredentials } from "@/types/auth.type";
 import { apiClient } from "./axios.config";
 
 export const authService = {
@@ -23,5 +24,13 @@ export const authService = {
       console.error("Token  refresh false");
       return null;
     }
+  },
+  login: async (credential: LoginCredentials): Promise<AuthResponse> => {
+    const response = await apiClient.post<AuthResponse>(
+      "/auth/login",
+      credential,
+    );
+
+    return response.data;
   },
 };

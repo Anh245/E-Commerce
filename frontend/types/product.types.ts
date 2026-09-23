@@ -30,3 +30,8 @@ export interface ProductsResponse {
   data: Product[];
   meta: PaginationMeta;
 }
+
+export interface ProductCart {
+  productId: string;
+  quantity: number;
+}

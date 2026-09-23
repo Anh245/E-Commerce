@@ -22,7 +22,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RoleGuard } from '../../commmon/guards/role.guard';
 import { UserResponseDto } from './dto/user-response.dto';
 import type { RequestWithUser } from '../../commmon/interfaces/request-with-user.interface';
-import { Role } from 'prisma-client/client';
+import { Role } from '@prisma/client';
 import { Roles } from '../../commmon/decorators/roles.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUser } from '../../commmon/decorators/get-user.decorator';

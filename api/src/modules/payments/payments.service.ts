@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import Stripe from 'stripe';
 import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto';
-import { PaymentStatus, Prisma } from 'prisma-client/client';
+import { PaymentStatus, Prisma } from '@prisma/client';
 import { ConfirmPaymentDto } from './dto/confirm-payment.dto';
 import { PaymentResponseDto } from './dto/payment-response.dto';
 

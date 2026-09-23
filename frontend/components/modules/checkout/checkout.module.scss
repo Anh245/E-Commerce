@@ -1,0 +1,172 @@
+.section {
+  min-height: 80vh;
+  padding: 3rem 0;
+  background-color: #fafafa;
+}
+
+.container {
+  max-width: center;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #000;
+  }
+
+  p {
+    color: #666;
+    font-size: 1rem;
+  }
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 0 2rem;
+}
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.stepNumber {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e5e5e5;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+  transition: all 0.3 ease;
+}
+
+.stepActive .stepNumber {
+  background-color: #000;
+  color: #fff;
+}
+.stepTitle {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #999;
+  transition: color 0.3s ease;
+}
+
+.stepActive .stepTitle {
+  flex: 1;
+  height: 2px;
+  background: #e5e5e5;
+  margin: 0 1rem;
+}
+
+.content {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 2.5rem;
+  box-shadow: 0 1px 3px rgba($color: #000000, $alpha: 1);
+}
+
+.stepContent {
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #000;
+  }
+}
+
+.summary {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 0.5rem;
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #000;
+  }
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  font-weight: 0.9375rem;
+  color: #666;
+
+  span:last-child {
+    font-weight: 500;
+    color: #000;
+  }
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e5e5;
+  margin: 1rem 0;
+}
+.summaryTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #000;
+}
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  .successIcon {
+    color: #22c55e;
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #000;
+  }
+
+  p {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .shippingInfo {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9375rem;
+    strong {
+      color: #000;
+    }
+  }
+}
+
+.continueButton {
+  padding: 0.875rem 2rem;
+  background-color: #000;
+}

@@ -7,7 +7,7 @@ import {
 import { PrismaService } from '../../prisma/prisma.service';
 import { ProductResponseDto } from './dto/response-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
-import { Category, Prisma, Product } from 'prisma-client/client';
+import { Category, Prisma, Product } from '@prisma/client';
 import { QueryProductDto } from './dto/query-product.dto';
 import { contains } from 'class-validator';
 import { UpdateProductDto } from './dto/update-product.dto';

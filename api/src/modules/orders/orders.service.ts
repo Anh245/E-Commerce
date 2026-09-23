@@ -10,13 +10,7 @@ import {
   OrderResponseDto,
 } from './dto/order-response.dto';
 import { text } from 'node:stream/consumers';
-import {
-  Order,
-  OrderItem,
-  OrderStatus,
-  Product,
-  User,
-} from 'prisma-client/client';
+import { Order, OrderItem, OrderStatus, Product, User } from '@prisma/client';
 import { QueryOrderDto } from './dto/query-order.dto';
 import { contains } from 'class-validator';
 import { retry, skip } from 'rxjs';

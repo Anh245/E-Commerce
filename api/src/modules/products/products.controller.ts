@@ -21,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RoleGuard } from '../../commmon/guards/role.guard';
-import { Role } from 'prisma-client/client';
+import { Role } from '@prisma/client';
 import { Roles } from '../../commmon/decorators/roles.decorator';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/response-product.dto';

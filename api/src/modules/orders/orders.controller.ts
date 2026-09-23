@@ -39,7 +39,7 @@ import {
   PaginatedOrderResponseDto,
 } from './dto/order-response.dto';
 import { GetUser } from '../../commmon/decorators/get-user.decorator';
-import { Role } from 'prisma-client/client';
+import { Role } from '@prisma/client';
 import { Roles } from '../../commmon/decorators/roles.decorator';
 import { QueryOrderDto } from './dto/query-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';

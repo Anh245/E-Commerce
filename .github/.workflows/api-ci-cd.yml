@@ -1,0 +1,78 @@
+#build, test and deploy our nestjs api for porduction
+name: CI/CD Nestjs to ECR then EC2
+
+on:
+  workflow_dispatch:
+    push:
+      branches:
+        - main
+
+jobs:
+  #CI Code Checks
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        users: actions/checkout@v3
+      - name: Setup Node.js
+        users: actions/setup-node@v4
+        with:
+          node-version: 24.19.0
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./api
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        workin-directory: ./api
+
+      - name: Lint
+        run: npm run lint:ci
+        working-directory: ./api
+
+      - name: Run tests
+        run: npm test
+        work-directory: ./api
+      - name: NPM audit (hight severity)
+        run: npm audit --audit-level-high
+        working-directory: ./api
+  deply:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        user: actions/checkout@v4
+
+      # Login to AWS, using AWS secrets access key that is dangerous
+      - name: Configure AWS OIDC
+        users: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assumne: ${{ secrets.AWS_OIDC_ROLE_ARN}}
+          aws-region: ${{secrets.AWS_REGION}}
+
+      # Login to ECR
+      - name: Login to ECR
+        run: aws ecr get-login-password --region${{secrets.AWS_REGION}} | \
+          docker login --username AWS --password-stdin ${{secrets.ECR_REPOSITORY}}
+
+      # Build Docker Image
+      - name: Docker Image Setup
+        run: docker build --no-cache -t e-commerce-store:latest ./api
+
+      #Tag Docker Image for ECR
+
+      - name: Tag Docker Image to ECR
+        run: docker tag e-commerce-store:latest ${{secrets.ECR_REPOSITORY}}
+
+      #Push Docker image
+      - name: Push Docker image to ECR
+        run: docker push ${{secrets.ECR_REPOSITORY}}:latest
+
+      #Deloy to EC2
+      - name: Deploy to EC2
+        user: appleboy/ssh-action

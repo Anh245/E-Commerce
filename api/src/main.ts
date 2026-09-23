@@ -23,12 +23,28 @@ async function bootstrap() {
   );
 
   //Fix CORS
+  const allowedOrigins = (
+    process.env.ALLOWED_ORIGINS ?? 'http://localhost:3000,http://localhost:3001'
+  )
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
   app.enableCors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') ?? 'http://localhost:3000',
-    credential: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
   });
+
+  const apiPublicUrl = process.env.API_PUBLIC_URL ?? 'http://localhost:3000';
 
   //Import Swagger docs
   const config = new DocumentBuilder()
@@ -61,7 +77,7 @@ async function bootstrap() {
       },
       'refreshtoken-jwt-auth',
     )
-    .addServer('http://localhost:3000', 'Local server')
+    .addServer(apiPublicUrl, 'Local server')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document, {

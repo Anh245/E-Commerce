@@ -1,6 +1,6 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from 'prisma-client/client';
+import { Role } from '@prisma/client';
 import { RoleGuard } from './role.guard';
 
 describe('RoleGuard', () => {

@@ -4,11 +4,19 @@
 
   /* Colors */
   --primary: #de6824;
+  --secondary: #3dde24;
+
+  /* border */
+  --border: #080908;
+
+  /* error */
+
+  --desctructive: #c31414;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #ffebeb;
+    --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
