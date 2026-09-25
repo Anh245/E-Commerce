@@ -9,7 +9,6 @@ import { ProductResponseDto } from './dto/response-product.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Category, Prisma, Product } from '@prisma/client';
 import { QueryProductDto } from './dto/query-product.dto';
-import { contains } from 'class-validator';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
@@ -44,7 +43,7 @@ export class ProductsService {
   }
 
   //FindById
-  async findOne(userId): Promise<ProductResponseDto> {
+  async findOne(userId: string): Promise<ProductResponseDto> {
     const selectedProduct = await this.prismaService.product.findUnique({
       where: {
         id: userId,
@@ -89,7 +88,7 @@ export class ProductsService {
       }
     }
 
-    const updateData: any = { ...updateProductDto };
+    const updateData: Prisma.ProductUpdateInput = { ...updateProductDto };
 
     if (updateProductDto && updateProductDto.price !== undefined) {
       updateData.price = new Prisma.Decimal(updateProductDto.price);
@@ -183,7 +182,7 @@ export class ProductsService {
       totalPages: number;
     };
   }> {
-    const { category, isActive, search, page = 1, limit = 10 } = queryDto;
+    const { isActive, search, page = 1, limit = 10 } = queryDto;
 
     const where: Prisma.ProductWhereInput = {};
 

@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { UserResponseDto } from './dto/user-response.dto';
 import { User } from '@prisma/client';
@@ -121,7 +117,7 @@ export class UsersService {
 
     const isSamePassword = await bcrypt.compare(newPassword!, user.password);
 
-    if (isPasswordValid) {
+    if (isSamePassword) {
       throw new NotFoundException(
         'Mat khau moi khong duoc trung voi mat khau hien tai',
       );

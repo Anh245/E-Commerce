@@ -8,7 +8,6 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { Order } from '@prisma/client';
 
 class OrderItemDto {
   @ApiProperty()

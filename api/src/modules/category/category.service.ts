@@ -9,7 +9,6 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryResponseDto } from './dto/response-category.dto';
 import { Category, Prisma } from '@prisma/client';
 import { QueryCategoryDto } from './dto/query-category.dto';
-import { skip } from 'node:test';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
@@ -31,13 +30,11 @@ export class CategoryService {
       slug ?? name?.toLowerCase().replace(/\s+/g, '-').replace(/[^w-]/g, '');
 
     //Check category exist
-    const existingCategory = await await this.prismaService.category.findUnique(
-      {
-        where: {
-          slug: categorySlug,
-        },
+    const existingCategory = await this.prismaService.category.findUnique({
+      where: {
+        slug: categorySlug,
       },
-    );
+    });
 
     if (existingCategory) {
       throw new Error(

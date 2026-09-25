@@ -7,6 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { Role } from '@prisma/client';
 import { ROLES_KEYS } from '../decorators/roles.decorator';
+import { RequestWithUser } from '../interfaces/request-with-user.interface';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -22,15 +23,13 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
+    const { user } = context.switchToHttp().getRequest<RequestWithUser>();
 
     if (!user) {
       throw new ForbiddenException('User not found in request');
     }
 
-    const userRole = user.role ?? user.roles;
-
-    if (!requireRoles.some((role) => userRole === role)) {
+    if (!requireRoles.some((role) => user.role === role)) {
       throw new ForbiddenException('You do not have permission');
     }
 

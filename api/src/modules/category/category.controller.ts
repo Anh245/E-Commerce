@@ -14,7 +14,6 @@ import { CategoryService } from './category.service';
 import {
   ApiBearerAuth,
   ApiBody,
-  ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,

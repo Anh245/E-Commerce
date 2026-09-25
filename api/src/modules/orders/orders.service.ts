@@ -9,12 +9,15 @@ import {
   OrderApiResponseDto,
   OrderResponseDto,
 } from './dto/order-response.dto';
-import { text } from 'node:stream/consumers';
-import { Order, OrderItem, OrderStatus, Product, User } from '@prisma/client';
+import {
+  Order,
+  OrderItem,
+  OrderStatus,
+  Prisma,
+  Product,
+  User,
+} from '@prisma/client';
 import { QueryOrderDto } from './dto/query-order.dto';
-import { contains } from 'class-validator';
-import { retry, skip } from 'rxjs';
-import { UsersService } from '../users/users.service';
 import { UpdateOrderDto } from './dto/update-order.dto';
 
 @Injectable()
@@ -124,13 +127,13 @@ export class OrdersService {
     const { page = 1, limit = 10, status, search } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = { userId };
+    const where: Prisma.OrderWhereInput = { userId };
 
     if (status) where.status = status;
     if (search) where.OR = [{ id: { contains: search, mode: 'insensitive' } }];
 
     const [orders, total] = await Promise.all([
-      await this.prismaService.order.findMany({
+      this.prismaService.order.findMany({
         where,
         skip,
         take: limit,
@@ -165,7 +168,7 @@ export class OrdersService {
     const { page = 1, limit = 10, status, search } = query;
     const skip = (page - 1) * limit;
 
-    const where: any = {};
+    const where: Prisma.OrderWhereInput = {};
 
     if (status) where.status = status;
 
@@ -207,8 +210,8 @@ export class OrdersService {
     id: string,
     userId?: string,
   ): Promise<OrderApiResponseDto<OrderResponseDto>> {
-    const where: any = { id };
-    if (userId) where.id = userId;
+    const where: Prisma.OrderWhereInput = { id };
+    if (userId) where.userId = userId;
 
     const order = await this.prismaService.order.findFirst({
       where,
@@ -235,7 +238,7 @@ export class OrdersService {
     updateOrderDto: UpdateOrderDto,
     userId?: string,
   ): Promise<OrderApiResponseDto<OrderResponseDto>> {
-    const where: any = {};
+    const where: Prisma.OrderWhereInput = { id };
     if (userId) where.userId = userId;
 
     const existing = await this.prismaService.order.findFirst({
@@ -266,7 +269,7 @@ export class OrdersService {
     id: string,
     userId?: string,
   ): Promise<OrderApiResponseDto<OrderResponseDto>> {
-    const where: any = {};
+    const where: Prisma.OrderWhereInput = { id };
     if (userId) where.userId = userId;
 
     const order = await this.prismaService.order.findFirst({
