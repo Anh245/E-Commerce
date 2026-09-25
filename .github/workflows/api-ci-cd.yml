@@ -47,7 +47,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      # Login to AWS, using AWS secrets access key that is dangerous
+      - name: Diagnose AWS OIDC claims
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const token = await core.getIDToken('sts.amazonaws.com');
+            core.setSecret(token);
+            const claims = JSON.parse(Buffer.from(token.split('.')[1], 'base64url').toString('utf8'));
+            // Log only non-secret claims needed to compare with the IAM trust policy.
+            core.info(JSON.stringify({
+              sub: claims.sub,
+              aud: claims.aud,
+              iss: claims.iss,
+              repository: claims.repository,
+              ref: claims.ref
+            }, null, 2));
+      # Authenticate with short-lived GitHub OIDC credentials.
       - name: Configure AWS OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
