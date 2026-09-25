@@ -47,20 +47,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       # Login to AWS, using AWS secrets access key that is dangerous
       - name: Configure AWS OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN}}
+          role-to-assume: ${{secrets.AWS_OIDC_ROLE_ARN}}
           aws-region: ${{secrets.AWS_REGION}}
-
       # Login to ECR
       - name: Login to ECR
         run: |
-          ECR_REGISTRY="${{ secrets.ECR_REPOSITORY }}"
+          ECR_REGISTRY="${{secrets.ECR_REPOSITORY }}"
           ECR_REGISTRY="${ECR_REGISTRY%%/*}"
-          aws ecr get-login-password --region "${{ secrets.AWS_REGION }}" |
+          aws ecr get-login-password --region "${{secrets.AWS_REGION}}" |
             docker login --username AWS --password-stdin "$ECR_REGISTRY"
 
       # Build Docker Image
@@ -122,4 +120,4 @@ jobs:
             -e JWT_REFRESH_SECRET \
             -e STRIPE_SECRET_KEY \
             -e NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
-            ${{ secrets.ECR_REPOSITORY}}:latest
+            ${{secrets.ECR_REPOSITORY}}:latest
