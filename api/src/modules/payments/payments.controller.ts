@@ -66,7 +66,7 @@ export class PaymentsController {
   })
   async confirmPayment(
     @Body() confirmPaymentDto: ConfirmPaymentDto,
-    @GetUser('user') userId: string,
+    @GetUser('id') userId: string,
   ) {
     return await this.paymentsService.confirmPayment(confirmPaymentDto, userId);
   }
