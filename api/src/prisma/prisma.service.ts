@@ -36,15 +36,15 @@ export class PrismaService
       throw new Error('Cannot clean database in development environment');
     }
 
-    const models = Reflect.ownKeys(this).filter(
-      (key) => typeof key === 'string' && !key.startsWith('_'),
-    );
-    return Promise.all(
-      models.map((modelKey) => {
-        if (typeof modelKey === 'string') {
-          return this[modelKey].deleteMany();
-        }
-      }),
-    );
+    return this.$transaction([
+      this.payment.deleteMany(),
+      this.orderItem.deleteMany(),
+      this.cartItem.deleteMany(),
+      this.order.deleteMany(),
+      this.cart.deleteMany(),
+      this.product.deleteMany(),
+      this.user.deleteMany(),
+      this.category.deleteMany(),
+    ]);
   }
 }

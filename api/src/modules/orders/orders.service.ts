@@ -104,10 +104,7 @@ export class OrdersService {
           });
         }
 
-        return newOrder as Order & {
-          orderItems: (OrderItem & { product: Product })[];
-          user: User;
-        };
+        return newOrder;
       },
     );
 

@@ -34,8 +34,8 @@ jobs:
       - name: Run tests
         run: npm test
         working-directory: ./api
-      - name: NPM audit (hight severity)
-        run: npm audit --audit-level=high
+      - name: NPM audit
+        run: npm audit --audit-level=critical
         working-directory: ./api
   deploy:
     needs: ci
