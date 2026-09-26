@@ -6,7 +6,7 @@ import { authService } from "./auth.Service";
 import { clearAuth, setAccessToken } from "@/store/slices/authSlice";
 
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.CONFIG_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
