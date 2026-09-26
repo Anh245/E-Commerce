@@ -1,12 +1,10 @@
 import { store } from "@/store";
 import axios from "axios";
-import { error } from "next/dist/build/output/log";
-import { config } from "next/dist/build/templates/pages";
 import { authService } from "./auth.Service";
 import { clearAuth, setAccessToken } from "@/store/slices/authSlice";
 
 export const apiClient = axios.create({
-  baseURL: process.env.CONFIG_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     "Content-Type": "application/json",
   },
