@@ -3,8 +3,8 @@ import {
   ConfirmPaymentRequest,
   CreatePaymentIntentRequest,
 } from "@/types/payment.type";
-import { data } from "motion/react-client";
 import { useCallback, useState } from "react";
+
 
 export function usePayment() {
   const [clientSecret, setClientSecret] = useState<string | null>(null);

@@ -32,6 +32,8 @@ export function useProducts() {
         const message = "Failed to load products:" + error;
         setError(message);
         return null;
+      } finally {
+        setIsLoading(false);
       }
     },
     [],

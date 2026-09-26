@@ -21,10 +21,10 @@ export default function PaymentMethodCard({
   description?: string;
   children: React.ReactNode;
 }) {
-  const isSelected = selectedMethod === "stripe";
+  const isSelected = selectedMethod === method;
   return (
     <div
-      className={`styles.card ${isSelected ? styles.cardSelected : ""}`}
+      className={`${styles.card} ${isSelected ? styles.cardSelected : ""}`}
       onClick={() => onSelect(method)}
     >
       <div className={styles.cardHeader}>
@@ -48,7 +48,7 @@ export default function PaymentMethodCard({
       {isSelected && children && (
         <motion.div
           initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 1 }}
+          animate={{ opacity: 1, height: "auto" }}
           transition={{ duration: 0.3 }}
           className={styles.cardContent}
         >

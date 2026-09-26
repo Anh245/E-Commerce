@@ -13,7 +13,7 @@ const ProductList = () => {
   const limit = 12;
   useEffect(() => {
     getProducts({ page, limit, search: debouncedSearch });
-  });
+  }, [page, debouncedSearch, getProducts]);
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +57,8 @@ const ProductList = () => {
         </div>
         {isLoading ? (
           <div className={styles.loading}>Loading products....</div>
+        ) : error ? (
+          <div className={styles.empty}>{error}</div>
         ) : products.length === 0 ? (
           <div className={styles.empty}>
             {debouncedSearch

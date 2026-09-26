@@ -44,7 +44,10 @@ const ProductDetail = ({ product }: { product: Product }) => {
         <div className={styles.grid}>
           <div className={styles.imageWrapper}>
             <Image
-              src={product.imageUrl.trimEnd()}
+              src={
+                product.imageUrl?.trim() ||
+                "https://images.unsplash.com/photo-1677668802628-63089ed265e8?q=80&w=774&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              }
               alt={product.name}
               width={600}
               height={600}

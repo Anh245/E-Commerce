@@ -36,7 +36,7 @@ export function StripePaymentProvicder({
     theme: "stripe",
     variables: {
       colorPrimary: "#de6824",
-      colorBackground: "#fffff",
+      colorBackground: "#ffffff",
       colorText: "#1e293b",
       colorDanger: "#ef4444",
       fontFamily: "poppins",
@@ -49,7 +49,7 @@ export function StripePaymentProvicder({
     clientSecret,
     appearance,
   };
-  return <Elements stripe={stripePromise}>{children}</Elements>;
+  return <Elements stripe={stripePromise} options={options}>{children}</Elements>;
 }
 
 export function StripePaymentForm({

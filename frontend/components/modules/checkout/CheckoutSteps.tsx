@@ -2,8 +2,8 @@
 
 import React from "react";
 import styles from "./checkout.module.scss";
-import { step } from "next/dist/experimental/testmode/playwright/step";
 import { Check } from "lucide-react";
+
 export default function CheckoutSteps({
   currentStep,
 }: {
