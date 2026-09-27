@@ -122,21 +122,21 @@ jobs:
             export NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$(echo $SECRETS_JSON |jq -r .NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
             docker run -d \
-            -p $PORT:$PORT \
-            --name e-commerce-store \
-            --log-driver=awslogs \
-            --log-opt awslogs-region=${{secrets.AWS_REGION}}
-            --log-opt awslogs-group=ecommerceapi-app \
-            --log-opt awslogs-stream-prefix=app-log \
-            -e DATABASE_USER \
-            -e DATABASE_PASSWORD \
-            -e DATABASE_NAME \
-            -e DATABASE_HOST \
-            -e DATABASE_PORT \
-            -e PORT \
-            -e ALLOWED_ORIGINS \
-            -e JWT_EXPIRES_IN \
-            -e JWT_REFRESH_SECRET \
-            -e STRIPE_SECRET_KEY \
-            -e NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
-            ${{secrets.ECR_REPOSITORY}}:latest
+              -p $PORT:$PORT \
+              --name e-commerce-store \
+              --log-driver=awslogs \
+              --log-opt awslogs-region=${{secrets.AWS_REGION}}
+              --log-opt awslogs-group=ecommerceapi-app \
+              --log-opt awslogs-stream-prefix=app-log \
+              -e DATABASE_USER \
+              -e DATABASE_PASSWORD \
+              -e DATABASE_NAME \
+              -e DATABASE_HOST \
+              -e DATABASE_PORT \
+              -e PORT \
+              -e ALLOWED_ORIGINS \
+              -e JWT_EXPIRES_IN \
+              -e JWT_REFRESH_SECRET \
+              -e STRIPE_SECRET_KEY \
+              -e NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
+              ${{secrets.ECR_REPOSITORY}}:latest
