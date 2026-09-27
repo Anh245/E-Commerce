@@ -1,13 +1,13 @@
 .section {
   min-height: 70vh;
-  padding: 2.5rem 0;
+  padding: 3rem 0 4rem;
   background: var(--bg);
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 2.5rem;
 }
 
 .header {
@@ -25,13 +25,13 @@
 }
 
 .clearButton {
-  padding: 0.5rem 1.125rem;
+  padding: 0.5rem 1.25rem;
   background: transparent;
   color: var(--destructive);
-  border: 1px solid var(--destructive);
-  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--destructive);
+  border-radius: var(--radius-md);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
   font-family: inherit;
@@ -39,6 +39,8 @@
   &:hover {
     background: var(--destructive);
     color: #fff;
+    box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+    transform: translateY(-1px);
   }
 }
 
@@ -87,21 +89,22 @@
 }
 
 .continueButton {
-  padding: 0.8rem 2rem;
-  background: var(--primary);
+  padding: 0.875rem 2.25rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #fff;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   transition: all var(--transition);
+  box-shadow: 0 3px 12px rgba(99, 102, 241, 0.28);
 
   &:hover {
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
   }
 }
 
@@ -168,22 +171,24 @@
 
 .checkoutButton {
   width: 100%;
-  padding: 0.875rem;
-  background: var(--primary);
+  padding: 0.95rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #fff;
   border: none;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   transition: all var(--transition);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.875rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 3px 12px rgba(99, 102, 241, 0.28);
 
   &:hover {
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
   }
 }
 

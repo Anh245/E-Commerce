@@ -1,13 +1,13 @@
 .section {
   min-height: 80vh;
-  padding: 3rem 0;
+  padding: 3.5rem 0;
   background: var(--bg);
 }
 
 .container {
-  max-width: 860px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 2.5rem;
 }
 
 .header {
@@ -53,23 +53,25 @@
 }
 
 .stepNumber {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  background: var(--border);
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
   color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .step.active .stepNumber {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-color: transparent;
   color: #fff;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.40);
 }
 
 .step.stepCompleted .stepNumber {
@@ -265,20 +267,22 @@
 }
 
 .continueButton {
-  padding: 0.8rem 2rem;
-  background: var(--primary);
+  padding: 0.9rem 2.25rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
   color: #fff;
   border: none;
-  border-radius: var(--radius-sm);
-  font-size: 0.95rem;
-  font-weight: 600;
+  border-radius: var(--radius-md);
+  font-size: 0.975rem;
+  font-weight: 700;
   cursor: pointer;
   font-family: inherit;
   transition: all var(--transition);
+  letter-spacing: 0.02em;
+  box-shadow: 0 3px 12px rgba(99, 102, 241, 0.28);
 
   &:hover {
-    background: var(--primary-dark);
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(99, 102, 241, 0.42);
   }
 }
