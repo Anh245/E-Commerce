@@ -1,12 +1,8 @@
 .footer {
   width: 100%;
-  background: #0f0f1a;
+  background: var(--surface-3);
+  border-top: 1px solid var(--border);
   margin-top: auto;
-
-  @media (prefers-color-scheme: dark) {
-    background: #07070f;
-    border-top: 1px solid rgba(99, 102, 241, 0.15);
-  }
 
   .container {
     max-width: 1400px;
@@ -46,7 +42,7 @@
       }
 
       p {
-        color: #94a3b8;
+        color: var(--text-secondary);
         font-size: 0.9rem;
         line-height: 1.75;
         max-width: 300px;
@@ -60,7 +56,7 @@
       h4 {
         font-size: 0.72rem;
         font-weight: 700;
-        color: #f1f5f9;
+        color: var(--text-primary);
         text-transform: uppercase;
         letter-spacing: 0.1em;
         margin-bottom: 1.25rem;
@@ -73,7 +69,7 @@
           margin-bottom: 0.75rem;
 
           a {
-            color: #64748b;
+            color: var(--text-secondary);
             font-size: 0.9rem;
             transition: color var(--transition);
             display: inline-flex;
@@ -81,7 +77,7 @@
             gap: 0.35rem;
 
             &:hover {
-              color: var(--accent);
+              color: var(--primary);
             }
           }
         }
@@ -90,7 +86,7 @@
   }
 
   .bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    border-top: 1px solid var(--border);
     padding-top: 1.75rem;
     display: flex;
     justify-content: space-between;
@@ -100,7 +96,7 @@
 
     p {
       font-size: 0.8rem;
-      color: #475569;
+      color: var(--text-muted);
     }
   }
 }

@@ -1,6 +1,6 @@
 /* ============================================
-   STOREFRONT — Global Design System
-   Palette: Deep Indigo + Violet + Coral accent
+   STOREFRONT — Global Design System  (Light Mode)
+   Palette: Soft White + Indigo + Violet accent
    ============================================ */
 
 :root {
@@ -25,11 +25,11 @@
   --destructive-bg:   #fef2f2;
   --destructive-border: #fecaca;
 
-  /* ── Backgrounds ── */
-  --bg:               #f8f8ff;
+  /* ── Backgrounds (always light) ── */
+  --bg:               #f5f6fa;
   --surface:          #ffffff;
-  --surface-2:        #f3f4f6;
-  --surface-3:        #e9eaf0;
+  --surface-2:        #f1f2f6;
+  --surface-3:        #e8e9f0;
 
   /* ── Text ── */
   --text-primary:     #111827;
@@ -42,12 +42,12 @@
   --border-strong:    #d1d5db;
 
   /* ── Shadows ── */
-  --shadow-xs: 0 1px 2px rgba(16, 24, 40, 0.05);
-  --shadow-sm: 0 1px 4px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
-  --shadow-md: 0 4px 16px rgba(16, 24, 40, 0.10), 0 2px 6px rgba(16, 24, 40, 0.06);
-  --shadow-lg: 0 8px 32px rgba(16, 24, 40, 0.12), 0 4px 12px rgba(16, 24, 40, 0.08);
-  --shadow-xl: 0 20px 60px rgba(16, 24, 40, 0.14);
-  --shadow-primary: 0 8px 24px rgba(99, 102, 241, 0.30);
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 6px rgba(15, 23, 42, 0.07), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.09), 0 2px 6px rgba(15, 23, 42, 0.05);
+  --shadow-lg: 0 8px 32px rgba(15, 23, 42, 0.11), 0 4px 12px rgba(15, 23, 42, 0.07);
+  --shadow-xl: 0 20px 60px rgba(15, 23, 42, 0.13);
+  --shadow-primary: 0 6px 22px rgba(99, 102, 241, 0.28);
 
   /* ── Border Radii ── */
   --radius-xs:  4px;
@@ -62,30 +62,6 @@
   --transition-slow: 0.35s ease;
 }
 
-/* ── Dark mode overrides ── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:               #0f0f18;
-    --surface:          #1a1a2e;
-    --surface-2:        #16213e;
-    --surface-3:        #0d1117;
-
-    --text-primary:     #f1f5f9;
-    --text-secondary:   #94a3b8;
-    --text-muted:       #475569;
-
-    --border:           #1e293b;
-    --border-strong:    #334155;
-
-    --primary-light:    rgba(99, 102, 241, 0.18);
-
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
-    --shadow-xl: 0 20px 60px rgba(0, 0, 0, 0.7);
-  }
-}
 
 /* ── Reset & Base ── */
 *,
@@ -99,6 +75,7 @@
 html {
   height: 100%;
   scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 html,
@@ -133,8 +110,4 @@ button {
   font-family: inherit;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
+

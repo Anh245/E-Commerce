@@ -5,15 +5,10 @@
   z-index: 100;
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  background: rgba(248, 248, 255, 0.88);
-  border-bottom: 1px solid rgba(99, 102, 241, 0.12);
-  box-shadow: 0 1px 0 rgba(99, 102, 241, 0.08), var(--shadow-sm);
+  background: rgba(255, 255, 255, 0.90);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.10);
+  box-shadow: 0 1px 0 rgba(99, 102, 241, 0.06), var(--shadow-sm);
   transition: box-shadow var(--transition-slow);
-
-  @media (prefers-color-scheme: dark) {
-    background: rgba(26, 26, 46, 0.90);
-    border-bottom-color: rgba(99, 102, 241, 0.20);
-  }
 
   .container {
     max-width: 1400px;
