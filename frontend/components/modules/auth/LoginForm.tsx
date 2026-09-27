@@ -2,9 +2,9 @@
 import styles from "./login-form.module.scss";
 import React, { FormEvent, useState } from "react";
 import { Info, Loader2 } from "lucide-react";
-
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const LoginForm = () => {
   const { error, isLoading, login } = useAuth();
@@ -85,6 +85,12 @@ const LoginForm = () => {
               )}
             </button>
           </form>
+
+          {/* Link to register */}
+          <p className={styles.registerLink}>
+            Chưa có tài khoản?{" "}
+            <Link href="/auth/register">Đăng ký ngay</Link>
+          </p>
         </div>
       </div>
     </section>

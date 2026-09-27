@@ -1,4 +1,4 @@
-import { AuthResponse, LoginCredentials } from "@/types/auth.type";
+import { AuthResponse, LoginCredentials, RegisterCredentials } from "@/types/auth.type";
 import { apiClient } from "./axios.config";
 
 export const authService = {
@@ -25,12 +25,21 @@ export const authService = {
       return null;
     }
   },
+
   login: async (credential: LoginCredentials): Promise<AuthResponse> => {
     const response = await apiClient.post<AuthResponse>(
-      "/auth",
+      "/auth/signin",
       credential,
     );
+    return response.data;
+  },
 
+  register: async (credential: RegisterCredentials): Promise<AuthResponse> => {
+    const response = await apiClient.post<AuthResponse>(
+      "/auth/register",
+      credential,
+    );
     return response.data;
   },
 };
+

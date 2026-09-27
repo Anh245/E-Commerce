@@ -1,20 +1,19 @@
 import LoginForm from "@/components/modules/auth/LoginForm";
 import React from "react";
 
-// Nextjs ISR caching strategy
 export const revalidate = false;
 
-export default function page() {
+export default function LoginPage() {
   return <LoginForm />;
 }
 
-// Nextjs dynamic metadata
 export function generateMetadata() {
   return {
-    title: `Page - Title here`,
-    description: `Page - Description here`,
+    title: "Đăng nhập - STOREFRONT",
+    description: "Đăng nhập vào tài khoản STOREFRONT của bạn.",
     icons: {
-      icon: `path to asset file`,
+      icon: `/favicon.ico`,
     },
   };
 }
+
