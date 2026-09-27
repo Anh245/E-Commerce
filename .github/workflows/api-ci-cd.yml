@@ -124,6 +124,10 @@ jobs:
             docker run -d \
             -p $PORT:$PORT \
             --name e-commerce-store \
+            --log-driver=awslogs \
+            --log-opt awslogs-region=${{secrets.AWS_REGION}}
+            --log-opt awslogs-group=ecommerceapi-app \
+            --log-opt awslogs-stream-prefix=app-log \
             -e DATABASE_USER \
             -e DATABASE_PASSWORD \
             -e DATABASE_NAME \
