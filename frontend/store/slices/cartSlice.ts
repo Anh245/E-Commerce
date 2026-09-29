@@ -1,8 +1,6 @@
 import { CartItem, CartState } from "@/types/cart.type";
 import { Product } from "@/types/product.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { actionAsyncStorage } from "next/dist/client/components/server-async-storage";
-import { getTraceItems } from "next/dist/next-devtools/dev-overlay/components/request-insights/trace-viewer";
 
 const initialState: CartState = {
   items: [],
@@ -12,10 +10,7 @@ const initialState: CartState = {
 
 const caculateTotals = (items: CartItem[]) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0,
-  );
+  const totalPrice = items.reduce((sum, item) => sum + item.product.price, 0);
   return { totalItems, totalPrice };
 };
 const cartSlice = createSlice({
