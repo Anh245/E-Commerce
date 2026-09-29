@@ -1,103 +1,137 @@
+/* ============================================
+   Footer — Faire-style editorial footer
+   ============================================ */
+
 .footer {
   width: 100%;
-  background: var(--surface-3);
-  border-top: 1px solid var(--border);
+  background: var(--color-ink-black);
+  color: var(--color-pure-white);
   margin-top: auto;
 
   .container {
-    max-width: 1400px;
+    max-width: var(--page-max-width);
     margin: 0 auto;
-    padding: 3.5rem 2.5rem 2rem;
+    padding: var(--spacing-56) var(--spacing-48) var(--spacing-32);
+
+    @media (max-width: 768px) {
+      padding: var(--spacing-48) var(--spacing-24) var(--spacing-32);
+    }
   }
 
+  /* ── Main content grid ── */
   .content {
     display: flex;
     justify-content: space-between;
-    gap: 3rem;
-    margin-bottom: 3rem;
+    gap: var(--spacing-48);
+    margin-bottom: var(--spacing-48);
     flex-wrap: wrap;
+    padding-bottom: var(--spacing-48);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 
     .brand {
-      flex: 1.8;
+      flex: 2;
       min-width: 240px;
 
       h3 {
-        font-size: 1.2rem;
-        font-weight: 800;
-        letter-spacing: -0.04em;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: var(--text-body);
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--color-pure-white);
+        margin-bottom: var(--spacing-16);
+      }
 
-        &::before {
-          content: "◆";
-          font-size: 0.85em;
-          filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.5));
-        }
+      .tagline {
+        display: block;
+        width: 36px;
+        height: 3px;
+        background: var(--color-butter-highlight);
+        margin-bottom: var(--spacing-16);
       }
 
       p {
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        line-height: 1.75;
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: var(--text-caption);
+        color: rgba(255, 255, 255, 0.55);
+        line-height: var(--leading-body);
+        letter-spacing: var(--tracking-caption);
         max-width: 300px;
       }
     }
+  }
 
-    .section {
-      flex: 1;
-      min-width: 140px;
+  /* ── Nav sections ── */
+  .section {
+    flex: 1;
+    min-width: 140px;
 
-      h4 {
-        font-size: 0.72rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        margin-bottom: 1.25rem;
-      }
+    h4 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: var(--spacing-16);
+    }
 
-      ul {
-        list-style: none;
+    ul {
+      list-style: none;
 
-        li {
-          margin-bottom: 0.75rem;
+      li {
+        margin-bottom: 12px;
 
-          a {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            transition: color var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
+        a {
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          font-size: var(--text-caption);
+          color: rgba(255, 255, 255, 0.72);
+          letter-spacing: var(--tracking-caption);
+          transition: color var(--transition);
+          display: inline;
 
-            &:hover {
-              color: var(--primary);
-            }
+          &:hover {
+            color: var(--color-pure-white);
           }
         }
       }
     }
   }
 
+  /* ── Bottom bar ── */
   .bottom {
-    border-top: 1px solid var(--border);
-    padding-top: 1.75rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: var(--spacing-16);
 
     p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      letter-spacing: 0.009em;
+    }
+
+    .legal {
+      display: flex;
+      gap: var(--spacing-16);
+
+      a {
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.35);
+        letter-spacing: 0.009em;
+        transition: color var(--transition);
+
+        &:hover {
+          color: rgba(255, 255, 255, 0.72);
+        }
+      }
     }
   }
 }
-

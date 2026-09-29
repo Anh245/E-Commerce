@@ -1,10 +1,10 @@
 import Providers from "@/providers";
-import { poppins } from "./font";
+import { inter, playfair } from "./font";
 import "./globals.css";
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${poppins.variable}`}>
+    <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body>
         <Providers>{children}</Providers>
       </body>

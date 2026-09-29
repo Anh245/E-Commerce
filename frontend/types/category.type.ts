@@ -8,3 +8,28 @@ export interface Category {
   createdAt: string;
   updatedAt: string;
 }
+export interface CategoryState {
+
+  name: string | null;
+  description: string | null;
+  slug: string | null;
+
+}
+
+export interface CategoriesResponse {
+  data: Category[];
+  meta: PaginationMeta;
+}
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface CategoryItem {
+  name: string,
+  description?: string,
+  slug?: string,
+}
