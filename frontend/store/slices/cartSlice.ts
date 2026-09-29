@@ -10,7 +10,10 @@ const initialState: CartState = {
 
 const caculateTotals = (items: CartItem[]) => {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.product.price, 0);
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0,
+  );
   return { totalItems, totalPrice };
 };
 const cartSlice = createSlice({
