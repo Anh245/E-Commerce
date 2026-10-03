@@ -1,10 +1,11 @@
 /* ============================================
-   STOREFRONT — Faire-inspired Design System
-   Palette: Warm Cream Catalog (achromatic)
-   Typography: Inter (Graphik sub) + Playfair Display (Nantes sub)
+   STOREFRONT — Design System
+   Client: Warm Cream Catalog (achromatic)
+   Admin: Indigo/Navy Dashboard
+   Typography: Inter + Playfair Display
    ============================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Poppins:wght@400;500;600;700&display=swap');
 
 :root {
   /* ── Faire Color Tokens ── */
@@ -185,3 +186,269 @@ img {
 button {
   font-family: inherit;
 }
+
+/* ============================================
+   ADMIN DESIGN SYSTEM — Variables & Utilities
+   ============================================ */
+:root {
+  /* ── Admin Color Palette ── */
+  --admin-sidebar-bg:       #1e1b4b;
+  --admin-sidebar-hover:    #2d2a6e;
+  --admin-sidebar-active:   #4338ca;
+  --admin-sidebar-text:     #c7d2fe;
+  --admin-sidebar-text-dim: #818cf8;
+  --admin-sidebar-border:   rgba(255,255,255,0.06);
+
+  --admin-bg:               #f8fafc;
+  --admin-surface:          #ffffff;
+  --admin-border:           #e2e8f0;
+  --admin-text:             #1e293b;
+  --admin-text-muted:       #64748b;
+
+  /* ── Admin Accent (Indigo) ── */
+  --admin-primary:          #6366f1;
+  --admin-primary-dark:     #4f46e5;
+  --admin-primary-light:    #eef2ff;
+  --admin-primary-gradient: linear-gradient(135deg, #6366f1, #7c3aed);
+
+  /* ── Admin Status Colors ── */
+  --status-pending-bg:      #fef9c3;
+  --status-pending-text:    #92400e;
+  --status-pending-border:  #fde047;
+
+  --status-shipped-bg:      #dbeafe;
+  --status-shipped-text:    #1e40af;
+  --status-shipped-border:  #93c5fd;
+
+  --status-delivered-bg:    #dcfce7;
+  --status-delivered-text:  #166534;
+  --status-delivered-border:#86efac;
+
+  --status-cancelled-bg:    #fee2e2;
+  --status-cancelled-text:  #991b1b;
+  --status-cancelled-border:#fca5a5;
+
+  --status-active-bg:       #dcfce7;
+  --status-active-text:     #166534;
+  --status-banned-bg:       #fee2e2;
+  --status-banned-text:     #991b1b;
+
+  /* ── Admin Radius ── */
+  --admin-radius-sm:        0.375rem;
+  --admin-radius-md:        0.625rem;
+  --admin-radius-lg:        0.875rem;
+  --admin-radius-xl:        1.25rem;
+  --admin-radius-pill:      9999px;
+
+  /* ── Admin Shadows ── */
+  --admin-shadow-sm:        0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+  --admin-shadow-md:        0 4px 16px rgba(99,102,241,0.08), 0 2px 6px rgba(0,0,0,0.05);
+  --admin-shadow-lg:        0 8px 32px rgba(99,102,241,0.12), 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* ── Admin Status Badge Utility Classes ── */
+.badge-pending   { background: var(--status-pending-bg);   color: var(--status-pending-text);   border: 1px solid var(--status-pending-border); }
+.badge-shipped   { background: var(--status-shipped-bg);   color: var(--status-shipped-text);   border: 1px solid var(--status-shipped-border); }
+.badge-delivered { background: var(--status-delivered-bg); color: var(--status-delivered-text); border: 1px solid var(--status-delivered-border); }
+.badge-cancelled { background: var(--status-cancelled-bg); color: var(--status-cancelled-text); border: 1px solid var(--status-cancelled-border); }
+.badge-active    { background: var(--status-active-bg);    color: var(--status-active-text); }
+.badge-banned    { background: var(--status-banned-bg);    color: var(--status-banned-text); }
+
+/* ── Admin Layout Base ── */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--admin-bg);
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+}
+
+/* ── Admin Card ── */
+.admin-card {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-lg);
+  box-shadow: var(--admin-shadow-sm);
+  padding: 1.5rem;
+}
+
+/* ── Admin Table ── */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.admin-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--admin-text-muted);
+  background: #f8fafc;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.admin-table td {
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: var(--admin-text);
+  vertical-align: middle;
+}
+
+.admin-table tr:hover td {
+  background: #f8faff;
+}
+
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Admin Badge ── */
+.admin-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  border-radius: var(--admin-radius-pill);
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ── Admin Button Variants ── */
+.admin-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  background: var(--admin-primary-gradient);
+  color: #fff;
+  border: none;
+  border-radius: var(--admin-radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+.admin-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.admin-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--admin-text-muted);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.admin-btn-ghost:hover { background: #f1f5f9; color: var(--admin-text); }
+
+.admin-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fca5a5;
+  border-radius: var(--admin-radius-md);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.admin-btn-danger:hover { background: #fecaca; }
+
+.admin-btn-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.75rem;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--admin-radius-md);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.admin-btn-edit:hover { background: #dbeafe; }
+
+/* ── Admin Input ── */
+.admin-input {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-md);
+  font-size: 0.875rem;
+  color: var(--admin-text);
+  background: var(--admin-surface);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.admin-input:focus {
+  border-color: var(--admin-primary);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+}
+
+/* ── Stat Card ── */
+.stat-card {
+  background: var(--admin-surface);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--admin-radius-lg);
+  box-shadow: var(--admin-shadow-sm);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.stat-card:hover {
+  box-shadow: var(--admin-shadow-md);
+  transform: translateY(-2px);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--admin-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--admin-text);
+  line-height: 1.1;
+}
+
+.stat-change {
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.stat-change.up   { color: #059669; }
+.stat-change.warn { color: #d97706; }

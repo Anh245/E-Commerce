@@ -1,7 +1,7 @@
 import { authService } from "@/services/api/auth.Service";
 import { IRootState, useAppDispacth } from "@/store";
-import { setAuth } from "@/store/slices/authSlice";
-import { LoginCredentials, RegisterCredentials } from "@/types/auth.type";
+import { setAuth, clearAuth, updateUser } from "@/store/slices/authSlice";
+import { LoginCredentials, RegisterCredentials, User } from "@/types/auth.type";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -16,10 +16,19 @@ export function useAuth() {
     setError(null);
     try {
       await authService.logout();
-    } catch (error) {}
+    } catch (error) {
+      console.error("Logout error", error);
+    } finally {
+      dispatch(clearAuth());
+      setIsLoading(false);
+    }
   };
 
-  const login = async (credentials: LoginCredentials): Promise<boolean> => {
+  const updateCurrentUser = (userData: Partial<User>) => {
+    dispatch(updateUser(userData));
+  };
+
+  const login = async (credentials: LoginCredentials): Promise<User | null> => {
     setIsLoading(true);
     setError(null);
 
@@ -32,10 +41,13 @@ export function useAuth() {
           user: response.user,
         }),
       );
-      return true;
-    } catch (error) {
-      setError("Email hoặc mật khẩu không đúng. Vui lòng thử lại.");
-      return false;
+      return response.user;
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message ??
+        "Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.";
+      setError(Array.isArray(msg) ? msg[0] : msg);
+      return null;
     } finally {
       setIsLoading(false);
     }
@@ -73,5 +85,6 @@ export function useAuth() {
     logout,
     login,
     register,
+    updateCurrentUser,
   };
 }

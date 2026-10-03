@@ -1,13 +1,23 @@
+"use client";
 import { Product } from "@/types/product.types";
-
 import Link from "next/link";
 import React from "react";
 import styles from "./product-card.module.scss";
 import Image from "next/image";
+import { Heart } from "lucide-react";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const id = product.id;
   const isInStock = product.stock > 0;
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isLiked = isInWishlist(product.id);
+
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWishlist(product);
+  };
 
   return (
     <Link href={`/${id}`} className={styles.card}>
@@ -24,6 +34,14 @@ const ProductCard = ({ product }: { product: Product }) => {
           style={{ objectFit: "cover" }}
           loading="lazy"
         />
+        <button
+          className={`${styles.wishlistBtn} ${isLiked ? styles.activeWishlist : ""}`}
+          onClick={handleWishlistClick}
+          title={isLiked ? "Remove from wishlist" : "Add to wishlist"}
+          type="button"
+        >
+          <Heart size={16} fill={isLiked ? "#ef4444" : "none"} stroke={isLiked ? "#ef4444" : "#475569"} />
+        </button>
       </div>
 
       {/* Content */}

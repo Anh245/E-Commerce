@@ -19,6 +19,7 @@ export interface ProductQueryParams {
   limit?: number;
   search?: string;
   category?: string;
+  isActive?: boolean;
 }
 export interface PaginationMeta {
   total: number;

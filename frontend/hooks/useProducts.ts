@@ -28,9 +28,8 @@ export function useProducts() {
         setProducts(response.data);
         setMeta(response.meta);
         return response;
-      } catch (error) {
-        const message = "Failed to load products:" + error;
-        setError(message);
+      } catch {
+        setError("Unable to load products. Please try again.");
         return null;
       } finally {
         setIsLoading(false);

@@ -5,6 +5,17 @@ import {
 } from "@/types/payment.type";
 import { apiClient } from "./axios.config";
 
+export interface PaymentItem {
+  id: string;
+  orderId?: string;
+  amount: number;
+  status: string;
+  currency?: string;
+  paymentMethod?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+
 export const PaymentService = {
   createPaymentIntent: async (
     data: CreatePaymentIntentRequest,
@@ -26,6 +37,16 @@ export const PaymentService = {
     );
 
     return response.data;
+  },
+
+  getMyPayments: async (): Promise<PaymentItem[]> => {
+    const response = await apiClient.get<PaymentItem[]>("/payments");
+    return Array.isArray(response.data) ? response.data : [];
+  },
+
+  getAllPaymentsAdmin: async (): Promise<PaymentItem[]> => {
+    const response = await apiClient.get<PaymentItem[]>("/payments");
+    return Array.isArray(response.data) ? response.data : [];
   },
 };
 

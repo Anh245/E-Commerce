@@ -1,54 +1,101 @@
 "use client";
 import React from "react";
 import Link from "next/link";
+import { ArrowRight, Sparkles, Star, ShieldCheck, Zap } from "lucide-react";
 import styles from "./hero.module.scss";
 
 const Hero = () => {
   return (
     <section className={styles.hero}>
-      {/* Full-bleed background image */}
-      <div className={styles.imageLayer}>
-        <img
-          src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?q=80&w=1920&auto=format&fit=crop"
-          alt="Boutique storefront with curated products"
-          className={styles.heroImage}
-        />
-        <div className={styles.overlay} />
-      </div>
+      {/* Dynamic Background */}
+      <div className={styles.bgGlow} />
 
-      {/* Editorial headline — bottom-left  */}
-      <div className={styles.content}>
-        <div className={styles.headlineGroup}>
-          <p className={styles.eyebrow}>New arrivals · Curated collection</p>
+      <div className={styles.container}>
+        <div className={styles.content}>
+          {/* 2026 Capsule Badge */}
+          <div className={styles.pillBadge}>
+            <Sparkles size={14} className={styles.sparkle} />
+            <span>Curated Edition · Spring 2026</span>
+          </div>
+
+          {/* Main Headline */}
           <h1 className={styles.headline}>
-            Shop the finest
-            <br />
-            <em>wholesale catalog</em>
+            Redefining Style with <br />
+            <span className={styles.gradientText}>Minimalist Luxury</span>
           </h1>
-          <div className={styles.accentRule} />
+
           <p className={styles.subtext}>
-            Over 100,000 brands. Curated for quality, delivered to your door.
+            Discover handpicked designer pieces crafted with uncompromising quality.
+            Seamless shopping, transparent pricing, and doorstep delivery worldwide.
           </p>
+
+          {/* Action CTAs */}
           <div className={styles.actions}>
-            <Link href="/" className={styles.ctaPrimary}>
-              Shop now
+            <Link href="/products" className={styles.ctaPrimary}>
+              Explore Collection <ArrowRight size={17} />
             </Link>
-            <Link href="/auth/login" className={styles.ctaGhost}>
-              Sign in
+            <Link href="/products?category=trending" className={styles.ctaGhost}>
+              Trending Drops
             </Link>
           </div>
-        </div>
-      </div>
 
-      {/* Promo strip at top */}
-      <div className={styles.promoBanner}>
-        <p>
-          Shop wholesale online from over{" "}
-          <strong>100,000 brands.</strong>{" "}
-          <Link href="/auth/login" className={styles.promoLink}>
-            Sign up free →
-          </Link>
-        </p>
+          {/* Social Proof */}
+          <div className={styles.socialProof}>
+            <div className={styles.avatarGroup}>
+              <img
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
+                alt="Customer"
+                className={styles.avatar}
+              />
+              <img
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80"
+                alt="Customer"
+                className={styles.avatar}
+              />
+              <img
+                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80"
+                alt="Customer"
+                className={styles.avatar}
+              />
+            </div>
+            <div className={styles.proofText}>
+              <div className={styles.stars}>
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} size={14} fill="#f59e0b" stroke="#f59e0b" />
+                ))}
+              </div>
+              <p>Loved by <strong>50,000+</strong> shoppers globally</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Hero Visual / Glass Card Showcase */}
+        <div className={styles.visual}>
+          <div className={styles.mainCard}>
+            <img
+              src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&auto=format&fit=crop&q=80"
+              alt="Luxury minimal fashion"
+              className={styles.heroImg}
+            />
+            {/* Floating Glass Pill 1 */}
+            <div className={`${styles.glassBadge} ${styles.badgeTop}`}>
+              <Zap size={16} className={styles.badgeIcon} />
+              <div>
+                <strong>Flash Drop 2026</strong>
+                <small>Limited stock available</small>
+              </div>
+            </div>
+
+            {/* Floating Glass Pill 2 */}
+            <div className={`${styles.glassBadge} ${styles.badgeBottom}`}>
+              <ShieldCheck size={16} className={styles.badgeIconGreen} />
+              <div>
+                <strong>100% Authentic</strong>
+                <small>Verified Craftsmanship</small>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

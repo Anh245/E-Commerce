@@ -182,9 +182,13 @@ export class ProductsService {
       totalPages: number;
     };
   }> {
-    const { isActive, search, page = 1, limit = 10 } = queryDto;
+    const { category, isActive, search, page = 1, limit = 10 } = queryDto;
 
     const where: Prisma.ProductWhereInput = {};
+
+    if (category) {
+      where.categoryId = category;
+    }
 
     if (isActive !== undefined) {
       where.isActive = isActive;

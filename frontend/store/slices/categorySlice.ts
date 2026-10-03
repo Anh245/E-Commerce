@@ -1,25 +1,41 @@
-import { CategoryState } from "@/types/category.type";
+import { Category, CategoryState } from "@/types/category.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: CategoryState = {
-    name: null,
-    description: null,
-    slug: null,
-
-}
+  items: [],
+  selectedCategoryId: null,
+  isLoading: false,
+  error: null,
+};
 
 const categorySlice = createSlice({
-    name: "category",
-    initialState,
-    reducers: {
-        setCategory: (state, action: PayloadAction<CategoryState>) => {
-            state.name = action.payload.name;
-            state.description = action.payload.description;
-            state.slug = action.payload.slug;
-        }
+  name: "category",
+  initialState,
+  reducers: {
+    setCategories: (state, action: PayloadAction<Category[]>) => {
+      state.items = action.payload;
+      state.isLoading = false;
+      state.error = null;
+    },
+    setSelectedCategory: (state, action: PayloadAction<string | null>) => {
+      state.selectedCategoryId = action.payload;
+    },
+    setCategoryLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
+    setCategoryError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+  },
+});
 
-    }
-})
-export const { setCategory } = categorySlice.actions;
+export const {
+  setCategories,
+  setSelectedCategory,
+  setCategoryLoading,
+  setCategoryError,
+} = categorySlice.actions;
 
 export const categoryReducer = categorySlice.reducer;
+export default categorySlice.reducer;

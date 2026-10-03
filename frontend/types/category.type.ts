@@ -9,11 +9,10 @@ export interface Category {
   updatedAt: string;
 }
 export interface CategoryState {
-
-  name: string | null;
-  description: string | null;
-  slug: string | null;
-
+  items: Category[];
+  selectedCategoryId: string | null;
+  isLoading: boolean;
+  error: string | null;
 }
 
 export interface CategoriesResponse {

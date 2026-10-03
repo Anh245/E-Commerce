@@ -1,44 +1,56 @@
 import { CategoryService } from "@/services/api/category.service";
-import { IRootState } from "@/store";
-import { setCategory } from "@/store/slices/categorySlice";
-import { Category } from "@/types/category.type";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { IRootState, useAppDispacth } from "@/store";
+import {
+  setCategories,
+  setSelectedCategory,
+  setCategoryLoading,
+  setCategoryError,
+} from "@/store/slices/categorySlice";
+import { useCallback } from "react";
+import { useSelector } from "react-redux";
 
 export function useCategory() {
-  const categoryState = useSelector((state: IRootState) => state.category);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const dispatch = useDispatch();
-  const [meta, setMeta] = useState({
-    total: 0,
-    page: 1,
-    limit: 10,
-    totalPages: 1,
-  });
-  const getCategories = async (): Promise<boolean> => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await CategoryService.getAllCategories();
-      setCategories(response.data); // response = { data: Category[], meta: PaginationMeta }
-      setMeta(response.meta);
+  const dispatch = useAppDispacth();
+  const { items: categories, selectedCategoryId, isLoading, error } = useSelector(
+    (state: IRootState) => state.category,
+  );
 
-      return true;
-    } catch (err) {
-      const message = "Loi khi lay danh sach danh muc:" + err;
-      setError(message);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const getCategories = useCallback(
+    async (force = false): Promise<boolean> => {
+      // Nếu đã có dữ liệu và không yêu cầu force refresh thì không cần fetch lại
+      if (categories.length > 0 && !force) {
+        return true;
+      }
+
+      dispatch(setCategoryLoading(true));
+      dispatch(setCategoryError(null));
+
+      try {
+        const response = await CategoryService.getAllCategories();
+        dispatch(setCategories(response.data));
+        return true;
+      } catch (err: any) {
+        const message = "Lỗi khi lấy danh sách danh mục: " + (err?.message ?? err);
+        dispatch(setCategoryError(message));
+        return false;
+      }
+    },
+    [categories.length, dispatch],
+  );
+
+  const selectCategory = useCallback(
+    (id: string | null) => {
+      dispatch(setSelectedCategory(id));
+    },
+    [dispatch],
+  );
+
   return {
+    categories,
+    selectedCategoryId,
     isLoading,
     error,
-    categories,
     getCategories,
-    meta,
+    selectCategory,
   };
 }

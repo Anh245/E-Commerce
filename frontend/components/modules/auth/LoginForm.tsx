@@ -8,19 +8,25 @@ import Link from "next/link";
 
 const LoginForm = () => {
   const { error, isLoading, login } = useAuth();
-  const [email, setEmail] = useState("user@exmaple.com");
-  const [password, setPassword] = useState("Abc123@ab");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const success = await login({ email, password });
+    const user = await login({ email, password });
 
-    if (success) {
-      const redirect = searchParams.get("redirect") ?? "/";
-      router.push(redirect);
+    if (user) {
+      const redirect = searchParams.get("redirect");
+      if (redirect) {
+        router.push(redirect);
+      } else if (user.role === "ADMIN") {
+        router.push("/admin");
+      } else {
+        router.push("/");
+      }
     }
   };
   return (

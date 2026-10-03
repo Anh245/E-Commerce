@@ -4,8 +4,8 @@ import { IsBoolean, IsOptional, IsString, Min } from 'class-validator';
 
 export class QueryProductDto {
   @ApiProperty({
-    description: 'Filter by category',
-    example: 'electronics',
+    description: 'Filter by category ID',
+    example: 'category-id',
   })
   @IsString()
   @IsOptional()

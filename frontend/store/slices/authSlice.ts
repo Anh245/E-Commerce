@@ -1,6 +1,5 @@
 import { User } from "@/types/auth.type";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { actionAsyncStorage } from "next/dist/client/components/server-async-storage";
 
 export interface AuthState {
   accessToken: string | null;
@@ -15,6 +14,7 @@ const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
 };
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -44,7 +44,14 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.isAuthenticated = true;
     },
+
+    updateUser: (state, action: PayloadAction<Partial<User>>) => {
+      if (state.user) {
+        state.user = { ...state.user, ...action.payload };
+      }
+    },
   },
 });
-export const { setAccessToken, clearAuth, setAuth } = authSlice.actions;
+
+export const { setAccessToken, clearAuth, setAuth, updateUser } = authSlice.actions;
 export default authSlice.reducer;
