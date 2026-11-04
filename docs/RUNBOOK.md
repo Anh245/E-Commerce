@@ -78,3 +78,17 @@ Cloudinary tính mức sử dụng theo gói; theo dõi dung lượng lưu, bi�
 Tham khảo [PaymentIntents](https://docs.stripe.com/payments/payment-intents), [idempotency](https://docs.stripe.com/api/idempotent_requests) và [kiểm tra webhook](https://docs.stripe.com/events/manage-webhook-endpoints).
 
 <!-- /AUTO-GENERATED -->
+
+## Triển khai refresh token bằng cookie HttpOnly
+
+- Backend login/register/refresh đặt cookie `refresh_session`: HttpOnly, SameSite=Lax, Path=/api/v1/auth, thời hạn 7 ngày; Secure khi NODE_ENV=production. JSON chỉ trả accessToken và user. PostgreSQL chỉ giữ hash refresh token; cập nhật hash có điều kiện để chống dùng lại token cũ.
+- Trình duyệt gọi xác thực qua proxy Next.js cùng origin tại `/api/v1/auth/{login,register,refresh,logout}`. Các API dữ liệu và upload ảnh vẫn gọi NestJS trực tiếp với Bearer access token để không đưa tệp ảnh qua Vercel Function.
+- Trên Vercel đặt `API_PROXY_TARGET=https://<api-host>/api/v1` ở dạng Config, chỉ dùng phía server. Proxy dự phòng bằng `NEXT_PUBLIC_API_URL` hiện có nếu chưa đặt biến mới. Không đặt URL frontend vào biến đích. Giữ `NEXT_PUBLIC_API_URL` trỏ đến API cho các request dữ liệu.
+- Trong Secrets Manager, ALLOWED_ORIGINS phải chứa chính xác origin frontend, ví dụ `https://<project>.vercel.app`, không có dấu / cuối và không có đường dẫn. Nếu dùng preview, thêm rõ origin preview được cho phép; không dùng wildcard. NODE_ENV của Docker đã là production. Không cần key JWT mới hay đổi schema DB.
+- Proxy và backend kiểm tra Origin cùng header X-CSRF-Protection:1. Trình duyệt gửi JSON; form chéo site hoặc request thiếu header bị từ chối. Không dựa vào CORS để thay thế kiểm tra CSRF.
+- Access token chỉ nằm trong bộ nhớ Redux. Auth bị loại khỏi redux-persist; migration bỏ auth cũ khi rehydrate. Trước khi render các trang, frontend thử khôi phục phiên qua cookie. Khi chưa có cookie, một phản hồi refresh 401 lúc khởi động là bình thường và không được retry vô hạn.
+- Đăng xuất thu hồi hash và xóa cookie đúng Path; trình duyệt xóa cookie cục bộ qua proxy ngay cả khi upstream lỗi, nhưng khi backend không truy cập được thì chưa thể bảo đảm thu hồi phía server. Bản cài hiện chỉ giữ một hash cho mỗi user nên đăng nhập mới thay phiên trước.
+- Các request refresh cùng tab dùng một Promise; Web Locks điều phối giữa các tab khi trình duyệt hỗ trợ, BroadcastChannel truyền đăng xuất. Trên trình duyệt thiếu Web Locks, refresh đồng thời nhiều tab có thể bị CAS từ chối và yêu cầu đăng nhập lại; không chấp nhận replay để tránh lỗi bảo mật.
+- Deploy backend trước, sau đó deploy frontend và đăng nhập lại. Đây là thay đổi hợp đồng xác thực: frontend cũ không tương thích backend cookie-only; nên thực hiện hai deployment gần nhau. Phiên localStorage cũ không được tự chuyển sang cookie.
+
+Kiểm tra sau deploy: login không có refreshToken trong JSON; Application → Cookies trên tên miền frontend có cookie HttpOnly/Secure; localStorage persist:root không chứa auth; tải lại trang vẫn đăng nhập; logout rồi tải lại không khôi phục phiên. Không cần cookie bên thứ ba giữa Vercel và DuckDNS. Không cần dùng SameSite=None.

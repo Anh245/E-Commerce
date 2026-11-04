@@ -54,6 +54,7 @@ Các biến mẫu nằm trong `api/.env.example`. Bảng này được tổng h�
 | `API_PUBLIC_URL`                     | API              | Không                                               | URL máy chủ hiển thị trong Swagger; mặc định `http://localhost:3000`, ví dụ cục bộ `http://localhost:3001`.                                                                       |
 | `NODE_ENV`                           | API              | Không                                               | Giá trị `development` bật log query/info/warn/error của Prisma; các giá trị khác chỉ ghi lỗi. Docker đặt `production`.                                                            |
 | `NEXT_PUBLIC_API_URL`                | Frontend         | Có để kết nối đúng API                              | URL gốc có kèm tiền tố chung, ví dụ `http://localhost:3001/api/v1`; không có giá trị dự phòng trong cấu hình.                                                                     |
+| `API_PROXY_TARGET` | Frontend server | Khuyến nghị khi deploy | URL NestJS gồm `/api/v1`, ví dụ `https://api.example.com/api/v1`. Proxy xác thực đọc biến này; dự phòng bằng NEXT_PUBLIC_API_URL. Không trỏ về chính frontend. |
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Frontend         | Có khi thanh toán                                   | Khóa công khai tương ứng với tài khoản và chế độ Stripe của API, ví dụ `pk_test_...`.                                                                                             |
 
 Quy trình CI/CD còn xuất các biến `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_NAME`, `DATABASE_HOST`, `DATABASE_PORT` và `JWT_REFRESH_SECRET`. Mã API đọc chuỗi kết nối đầy đủ từ `DATABASE_URL` và dùng `JWT_SECRET` để xác minh refresh token. Compose còn khai báo `JWT_REFRESH_EXPIRES_IN`; mã xác thực hiện tại không đọc cả hai biến dành riêng cho refresh token. Truyền khóa công khai Stripe vào container API không cấu hình frontend được build riêng.
@@ -73,3 +74,7 @@ Quy trình CI/CD còn xuất các biến `DATABASE_USER`, `DATABASE_PASSWORD`, `
 - Cập nhật bảng biến môi trường và tham chiếu đường dẫn API khi mã nguồn tương ứng thay đổi.
 - Mô tả thay đổi hành vi người dùng nhìn thấy và cách đã kiểm chứng; không đưa khóa thật hay tệp môi trường cục bộ vào bản diff.
 - Đọc [hướng dẫn vận hành](RUNBOOK.md) để nắm các giới hạn triển khai trước khi đề xuất thay đổi phát hành.
+
+## Kiểm thử phiên đăng nhập
+
+Trong `frontend/`, chạy `node --test test/auth-refresh.test.cjs` để kiểm tra refresh qua cookie, proxy, CSRF và logout khi request đang chờ.

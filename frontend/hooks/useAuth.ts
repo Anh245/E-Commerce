@@ -2,6 +2,7 @@ import { authService } from "@/services/api/auth.Service";
 import { IRootState, useAppDispacth } from "@/store";
 import { setAuth, clearAuth, updateUser } from "@/store/slices/authSlice";
 import { LoginCredentials, RegisterCredentials, User } from "@/types/auth.type";
+import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -37,14 +38,13 @@ export function useAuth() {
       dispatch(
         setAuth({
           accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
           user: response.user,
         }),
       );
       return response.user;
-    } catch (err: any) {
+    } catch (err: unknown) {
       const msg =
-        err?.response?.data?.message ??
+        (isAxiosError<{ message?: string | string[] }>(err) ? err.response?.data?.message : undefined) ??
         "Email hoặc mật khẩu không đúng. Vui lòng kiểm tra lại.";
       setError(Array.isArray(msg) ? msg[0] : msg);
       return null;
@@ -62,14 +62,13 @@ export function useAuth() {
       dispatch(
         setAuth({
           accessToken: response.accessToken,
-          refreshToken: response.refreshToken,
           user: response.user,
         }),
       );
       return true;
-    } catch (err: any) {
+    } catch (err: unknown) {
       const msg =
-        err?.response?.data?.message ?? "Đăng ký thất bại. Vui lòng thử lại.";
+        (isAxiosError<{ message?: string | string[] }>(err) ? err.response?.data?.message : undefined) ?? "Đăng ký thất bại. Vui lòng thử lại.";
       setError(Array.isArray(msg) ? msg[0] : msg);
       return false;
     } finally {

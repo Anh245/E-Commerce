@@ -5,18 +5,31 @@ import {
   HttpStatus,
   Post,
   UseGuards,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import {
+  AuthResponseDto,
+  AuthSessionResponseDto,
+} from './dto/auth-response.dto';
 //import { RefreshToKenStrategy } from './strategies/refresh-token.strategy';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { GetUser } from '../../commmon/decorators/get-user.decorator';
-import { JwtAuthGuard } from './guards/jwt.guard';
+import type { Response, Request } from 'express';
+import { LogoutRefreshGuard } from './guards/logout-refresh.guard';
+import { AuthOriginGuard } from './guards/auth-origin.guard';
+import {
+  REFRESH_COOKIE,
+  REFRESH_TTL_MS,
+  refreshCookieOptions,
+} from './refresh-cookie';
 import { LoginDto } from './dto/login.dto';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
+@UseGuards(AuthOriginGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -25,12 +38,12 @@ export class AuthController {
   @ApiOperation({
     summary: 'create a new user',
     description: 'create a new user account',
-    //type: AuthResponseDto,
+    //type: AuthSessionResponseDto,
   })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-    type: AuthResponseDto,
+    type: AuthSessionResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -44,14 +57,17 @@ export class AuthController {
     status: 429,
     description: 'To many request, rate limit exceeded',
   })
-  async register(@Body() registerDto: RegisterDto): Promise<AuthResponseDto> {
-    return await this.authService.register(registerDto);
+  async register(
+    @Body() dto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.sessionResponse(await this.authService.register(dto), res);
   }
 
   //refresh
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  @ApiBearerAuth('refreshtoken-jwt-auth')
+  // Refresh authentication is cookie-only.
   @ApiOperation({
     summary: 'refresh access token',
     description: 'generate a new access token',
@@ -60,7 +76,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: ' new access token generated successfully',
-    type: AuthResponseDto,
+    type: AuthSessionResponseDto,
   })
   @ApiResponse({
     status: 401,
@@ -70,10 +86,16 @@ export class AuthController {
     status: 429,
     description: 'To many request, rate limit exceeded',
   })
-  @Post('refresh')
   @UseGuards(RefreshTokenGuard)
-  async refresh(@GetUser('id') userId: string): Promise<AuthResponseDto> {
-    return await this.authService.refreshToken(userId);
+  async refresh(
+    @GetUser('id') userId: string,
+    @GetUser('refreshTokenHash') hash: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.sessionResponse(
+      await this.authService.refreshToken(userId, hash),
+      res,
+    );
   }
 
   //Login
@@ -85,7 +107,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Login successfully',
-    type: AuthResponseDto,
+    type: AuthSessionResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -95,13 +117,16 @@ export class AuthController {
     status: 429,
     description: 'To many request, rate limit exceeded',
   })
-  async login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
-    return this.authService.login(loginDto);
+  async login(
+    @Body() dto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.sessionResponse(await this.authService.login(dto), res);
   }
 
   //LogOut and invalidate refresh token
   @Post('logout')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(LogoutRefreshGuard)
   @ApiOperation({
     summary: 'Log out',
     description: 'Log out account ',
@@ -118,8 +143,21 @@ export class AuthController {
     status: 429,
     description: 'To many request, rate limit exceeded',
   })
-  async logout(@GetUser('id') userId: string) {
-    await this.authService.logout(userId);
+  async logout(
+    @Req() req: Request & { user?: { id: string } },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    if (req.user) await this.authService.logout(req.user.id);
+    res.clearCookie(REFRESH_COOKIE, refreshCookieOptions());
+    res.setHeader('Cache-Control', 'no-store');
     return { message: 'Logout successfully' };
+  }
+  private sessionResponse(session: AuthResponseDto, res: Response) {
+    res.cookie(REFRESH_COOKIE, session.refreshToken, {
+      ...refreshCookieOptions(),
+      maxAge: REFRESH_TTL_MS,
+    });
+    res.setHeader('Cache-Control', 'no-store');
+    return { accessToken: session.accessToken, user: session.user };
   }
 }

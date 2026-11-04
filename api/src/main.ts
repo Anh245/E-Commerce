@@ -41,7 +41,12 @@ async function bootstrap() {
     },
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'Accept',
+      'X-CSRF-Protection',
+    ],
   });
 
   const apiPublicUrl = process.env.API_PUBLIC_URL ?? 'http://localhost:3000';

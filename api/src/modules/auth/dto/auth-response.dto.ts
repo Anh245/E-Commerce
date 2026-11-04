@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
 
 export class AuthResponseDto {
@@ -32,3 +32,7 @@ export class AuthResponseDto {
     role: Role;
   };
 }
+
+export class AuthSessionResponseDto extends OmitType(AuthResponseDto, [
+  'refreshToken',
+] as const) {}

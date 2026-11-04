@@ -1,9 +1,11 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
+import { Strategy } from 'passport-jwt';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Request } from 'express';
+import { createHash } from 'node:crypto';
+import { readRefreshCookie } from '../refresh-cookie';
 
 @Injectable()
 export class RefreshToKenStrategy extends PassportStrategy(
@@ -12,7 +14,7 @@ export class RefreshToKenStrategy extends PassportStrategy(
 ) {
   constructor(private readonly prisma: PrismaService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: readRefreshCookie,
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET || 'dev-secret-change-me',
       passReqToCallback: true,
@@ -21,17 +23,9 @@ export class RefreshToKenStrategy extends PassportStrategy(
 
   //set validate
   async validate(req: Request, payload: { sub: string; email: string }) {
-    console.log('validate RefreshToken is called');
-    console.log(payload);
-
     // Get refreshToken tu request
     //const authtest = req.headers['authorization'];
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      console.log('Khong tim thay token');
-      throw new UnauthorizedException('Khong tim thay token');
-    }
-    const refreshToken = authHeader.split(' ')[1];
+    const refreshToken = readRefreshCookie(req);
 
     if (!refreshToken) {
       throw new UnauthorizedException('Khong tim thay token');
@@ -58,7 +52,7 @@ export class RefreshToKenStrategy extends PassportStrategy(
       );
     }
     const MatchRefreshToken = await bcrypt.compare(
-      refreshToken,
+      createHash('sha256').update(refreshToken).digest('hex'),
       user.refreshToken,
     );
     if (!MatchRefreshToken) {
@@ -70,6 +64,7 @@ export class RefreshToKenStrategy extends PassportStrategy(
       email: user.email,
 
       role: user.role,
+      refreshTokenHash: user.refreshToken,
     };
   }
 }

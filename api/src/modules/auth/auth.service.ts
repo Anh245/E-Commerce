@@ -95,12 +95,20 @@ export class AuthService {
         id: userId,
       },
       data: {
-        refreshToken,
+        refreshToken: await bcrypt.hash(
+          crypto.createHash('sha256').update(refreshToken).digest('hex'),
+          this.SALT_ROUNDS,
+        ),
       },
     });
   }
 
-  async refreshToken(userId: string): Promise<AuthResponseDto> {
+  async refreshToken(
+    userId: string,
+    expectedHash: string,
+  ): Promise<AuthResponseDto> {
+    if (!expectedHash)
+      throw new UnauthorizedException('Missing refresh session');
     const user = await this.prisma.user.findUnique({
       where: {
         id: userId,
@@ -111,6 +119,7 @@ export class AuthService {
         firstName: true,
         lastName: true,
         role: true,
+        refreshToken: true,
       },
     });
 
@@ -118,11 +127,25 @@ export class AuthService {
       throw new UnauthorizedException('Khong tim thay nguoi dung');
     }
     const tokens = await this.generateTokens(user.id, user.email);
-    await this.updateRefreshToken(user.id, tokens.refreshToken);
+    const nextHash = await bcrypt.hash(
+      crypto.createHash('sha256').update(tokens.refreshToken).digest('hex'),
+      this.SALT_ROUNDS,
+    );
+    const rotated = await this.prisma.user.updateMany({
+      where: { id: user.id, refreshToken: expectedHash },
+      data: { refreshToken: nextHash },
+    });
+    if (!rotated.count) throw new UnauthorizedException('Session has changed');
 
     return {
       ...tokens,
-      user,
+      user: {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+      },
     };
   }
 

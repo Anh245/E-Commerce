@@ -31,7 +31,13 @@ const storageEngine =
 const persistConfig = {
   key: "root",
   storage: storageEngine,
-  whitelist: ["cart", "auth", "wishlist", "ui"], // Persist cart, auth, wishlist, and ui preferences
+  migrate: (state: import("redux-persist").PersistedState) => {
+    if (!state) return Promise.resolve(state);
+    const clean = { ...state } as typeof state & { auth?: unknown };
+    delete clean.auth;
+    return Promise.resolve(clean);
+  },
+  whitelist: ["cart", "wishlist", "ui"], // Authentication stays in memory only.
 };
 
 const rootReducer = combineReducers({
