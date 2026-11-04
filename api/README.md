@@ -1,3 +1,56 @@
+<!-- AUTO-GENERATED -->
+## Hướng dẫn riêng cho dự án
+
+Xem [hướng dẫn đóng góp](../docs/CONTRIBUTING.md) để thiết lập môi trường, tra cứu toàn bộ lệnh API và biến môi trường; xem [hướng dẫn vận hành](../docs/RUNBOOK.md) để triển khai. Khi phát triển, dùng `npm run dev`; lệnh `start:dev` trong nội dung mẫu được giữ lại bên dưới không được định nghĩa trong package.json. API mặc định dùng cổng 3000; đặt PORT=3001 khi chạy cùng frontend.
+
+### Tham chiếu đường dẫn API
+
+Được tổng hợp từ các decorator đang sử dụng trong controller và `src/main.ts`. Giao diện Swagger nằm tại `/api/docs`; xem guard của controller và DTO để biết yêu cầu xác thực, vai trò, trường dữ liệu gửi lên và phản hồi.
+
+| Phương thức | Đường dẫn | Mã nguồn |
+|---|---|---|
+| `GET` | `/api/v1` | [app.controller.ts](src/app.controller.ts) |
+| `POST` | `/api/v1/auth/register` | [auth.controller.ts](src/modules/auth/auth.controller.ts) |
+| `POST` | `/api/v1/auth/refresh` | [auth.controller.ts](src/modules/auth/auth.controller.ts) |
+| `POST` | `/api/v1/auth/login` | [auth.controller.ts](src/modules/auth/auth.controller.ts) |
+| `POST` | `/api/v1/auth/logout` | [auth.controller.ts](src/modules/auth/auth.controller.ts) |
+| `POST` | `/api/v1/category` | [category.controller.ts](src/modules/category/category.controller.ts) |
+| `GET` | `/api/v1/category` | [category.controller.ts](src/modules/category/category.controller.ts) |
+| `GET` | `/api/v1/category/:id` | [category.controller.ts](src/modules/category/category.controller.ts) |
+| `GET` | `/api/v1/category/slug/:slug` | [category.controller.ts](src/modules/category/category.controller.ts) |
+| `PATCH` | `/api/v1/category/:id` | [category.controller.ts](src/modules/category/category.controller.ts) |
+| `DELETE` | `/api/v1/category/:id` | [category.controller.ts](src/modules/category/category.controller.ts) |
+| `POST` | `/api/v1/orders` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `GET` | `/api/v1/orders/admin/all` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `GET` | `/api/v1/orders` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `GET` | `/api/v1/orders/admin/:id` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `GET` | `/api/v1/orders/:id` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `PATCH` | `/api/v1/orders/admin/:id` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `PATCH` | `/api/v1/orders/:id` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `DELETE` | `/api/v1/orders/admin/:id` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `DELETE` | `/api/v1/orders/:id` | [orders.controller.ts](src/modules/orders/orders.controller.ts) |
+| `POST` | `/api/v1/payments/create-intent` | [payments.controller.ts](src/modules/payments/payments.controller.ts) |
+| `POST` | `/api/v1/payments/confirm` | [payments.controller.ts](src/modules/payments/payments.controller.ts) |
+| `GET` | `/api/v1/payments` | [payments.controller.ts](src/modules/payments/payments.controller.ts) |
+| `GET` | `/api/v1/payments/:id` | [payments.controller.ts](src/modules/payments/payments.controller.ts) |
+| `GET` | `/api/v1/payments/order/:orderId` | [payments.controller.ts](src/modules/payments/payments.controller.ts) |
+| `POST` | `/api/v1/products` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `GET` | `/api/v1/products` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `GET` | `/api/v1/products/:id` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `PATCH` | `/api/v1/products/:id` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `PATCH` | `/api/v1/products/:id/stock` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `DELETE` | `/api/v1/products/:id` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `GET` | `/api/v1/users/me` | [users.controller.ts](src/modules/users/users.controller.ts) |
+| `GET` | `/api/v1/users` | [users.controller.ts](src/modules/users/users.controller.ts) |
+| `GET` | `/api/v1/users/:id` | [users.controller.ts](src/modules/users/users.controller.ts) |
+| `PATCH` | `/api/v1/users/me` | [users.controller.ts](src/modules/users/users.controller.ts) |
+| `PATCH` | `/api/v1/users/me/password` | [users.controller.ts](src/modules/users/users.controller.ts) |
+| `DELETE` | `/api/v1/users/me` | [users.controller.ts](src/modules/users/users.controller.ts) |
+| `DELETE` | `/api/v1/users/:id` | [users.controller.ts](src/modules/users/users.controller.ts) |
+
+Chưa đăng ký controller giỏ hàng; lời gọi `/cart/merge` từ frontend chưa có đường dẫn backend tương ứng.
+<!-- /AUTO-GENERATED -->
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>

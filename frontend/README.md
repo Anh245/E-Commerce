@@ -1,3 +1,16 @@
+<!-- AUTO-GENERATED -->
+## Hướng dẫn riêng cho dự án
+
+Xem [hướng dẫn đóng góp](../docs/CONTRIBUTING.md) để thiết lập môi trường và [hướng dẫn vận hành](../docs/RUNBOOK.md) để biết chi tiết triển khai. Trang cửa hàng nằm tại `app/(landing)/page.tsx`; nội dung mẫu ban đầu của framework bên dưới được giữ nguyên.
+
+| Lệnh (chạy trong `frontend/`) | Lệnh gốc | Mục đích |
+|---|---|---|
+| `npm run dev` | `next dev` | Khởi động máy chủ phát triển Next.js. |
+| `npm run build` | `next build` | Build ứng dụng Next.js cho môi trường production. |
+| `npm run start` | `next start` | Phục vụ bản build production (cần build trước). |
+| `npm run lint` | `eslint` | Chạy ESLint với các quy tắc Next.js Core Web Vitals và TypeScript. |
+<!-- /AUTO-GENERATED -->
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
