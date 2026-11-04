@@ -1,13 +1,15 @@
 export interface CreatePaymentIntentRequest {
   orderId: string;
-  amount: number;
+  amount?: number;
   description?: string;
   currency?: string;
 }
 
 export interface CreatePaymentIntentResponse {
-  clientSecret: string;
+  clientSecret?: string;
   paymentId: string;
+  amount: number;
+  paid?: boolean;
 }
 
 export interface PaymentResponse {

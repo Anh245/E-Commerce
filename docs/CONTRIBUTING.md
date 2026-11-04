@@ -2,7 +2,7 @@
 
 1. Sử dụng Node.js 24.19.0 và npm để đồng nhất với quy trình CI/CD API và Dockerfile. Cài PostgreSQL riêng; Compose chỉ khai báo dịch vụ API.
 2. Chạy `npm ci` riêng trong `api/` và `frontend/`. Thư mục gốc không có package hay lệnh dùng chung cho workspace.
-3. Tạo `api/.env` với các biến API trong bảng bên dưới. Tệp này được Git bỏ qua; tệp mẫu `api/.env.example` hiện đang trống. Tệp `.env` cung cấp biến cho Prisma CLI và các đoạn mã đọc môi trường ở cấp module thông qua `dotenv/config`. Nest ConfigModule còn khai báo thứ tự đọc `.env.local` trước `.env`.
+3. Tạo `api/.env` với các biến API trong bảng bên dưới. Tệp này được Git bỏ qua; sao chép các giá trị mẫu từ `api/.env.example` rồi thay bằng cấu hình của bạn. Tệp `.env` cung cấp biến cho Prisma CLI và các đoạn mã đọc môi trường ở cấp module thông qua `dotenv/config`. Nest ConfigModule còn khai báo thứ tự đọc `.env.local` trước `.env`.
 4. Trong `api/`, chạy `npx prisma generate`, sau đó chạy `npx prisma migrate dev` với cơ sở dữ liệu phát triển cục bộ. Prisma sử dụng `prisma/schema.prisma` và `prisma/migrations`.
 5. Tạo `frontend/.env.local` với các biến frontend trong bảng bên dưới.
 6. Chạy `npm run dev` trong `api/`; mở terminal thứ hai và chạy `npm run dev` trong `frontend/`. Đặt `PORT=3001` cho API để tránh hai ứng dụng cùng sử dụng cổng 3000. Nếu không cấu hình, API mặc định dùng cổng 3000.
@@ -35,12 +35,18 @@
 
 ## Tham chiếu biến môi trường
 
-Tệp mẫu chưa định nghĩa biến nào. Bảng này được tổng hợp từ mã đọc biến khi chạy trong `api/src/main.ts`, `api/src/prisma/prisma.service.ts`, `api/src/modules/auth/`, `api/src/modules/payments/payments.service.ts`, `frontend/services/api/axios.config.ts` và `frontend/components/modules/checkout/StripePaymentProvicder.tsx`.
+Các biến mẫu nằm trong `api/.env.example`. Bảng này được tổng hợp từ mã đọc biến khi chạy trong `api/src/main.ts`, `api/src/prisma/prisma.service.ts`, `api/src/modules/auth/`, `api/src/modules/payments/payments.service.ts`, `frontend/services/api/axios.config.ts` và `frontend/components/modules/checkout/StripePaymentProvicder.tsx`.
 
 | Biến                                 | Nơi sử dụng      | Bắt buộc                                            | Định dạng / mục đích / ví dụ                                                                                                                                                      |
 | ------------------------------------ | ---------------- | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `DATABASE_URL`                       | API / Prisma CLI | Có                                                  | URL kết nối PostgreSQL, ví dụ `postgresql://user:password@localhost:5432/ecommerce`; mã hóa URL cho thông tin đăng nhập.                                                          |
 | `STRIPE_SECRET_KEY`                  | API              | Có                                                  | Khóa bí mật Stripe; dùng khóa thử nghiệm (`sk_test_...`) khi phát triển cục bộ. Dịch vụ thanh toán được khởi tạo ngay khi ứng dụng khởi động.                                     |
+| `CLOUDINARY_CLOUD_NAME` | API | Có khi tải ảnh | Lấy từ Cloudinary Console; chỉ cấu hình ở backend. |
+| `CLOUDINARY_API_KEY` | API | Có khi tải ảnh | Lấy từ Cloudinary Console; chỉ cấu hình ở backend. |
+| `CLOUDINARY_API_SECRET` | API | Có khi tải ảnh | Lấy từ Cloudinary Console; chỉ cấu hình ở backend. |
+| `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` | Frontend (khi build) | Có để hiển thị ảnh Cloudinary | Cùng cloud name với backend; không chứa API key hay secret. |
+| `PRODUCT_IMAGES_BASE_URL` | Frontend (khi build) | Không | Chỉ giữ nếu còn URL ảnh S3/CDN cũ cần hiển thị. |
+| `STRIPE_WEBHOOK_SECRET` | API | Có để nhận webhook | Secret ký webhook từ Stripe (`whsec_...`), dùng cho `/api/v1/payments/webhook`. |
 | `JWT_SECRET`                         | API              | Cần đặt khi chạy ngoài môi trường phát triển cục bộ | Chuỗi bí mật không rỗng, dùng cho cả access token và refresh token. Giá trị dự phòng trong mã là `dev-secret-change-me`.                                                          |
 | `JWT_EXPIRES_IN`                     | API              | Không                                               | Thời hạn mặc định của module JWT, ví dụ `15m`; giá trị dự phòng là chuỗi `900`. Mã tạo token đặt trực tiếp `15m` cho access token và `7d` cho refresh token, ghi đè mặc định này. |
 | `PORT`                               | API              | Không                                               | Cổng TCP; mặc định `3000`, dùng `3001` khi chạy cùng frontend.                                                                                                                    |

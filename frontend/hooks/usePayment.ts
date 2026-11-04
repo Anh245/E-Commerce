@@ -20,7 +20,7 @@ export function usePayment() {
         const response = await PaymentService.createPaymentIntent(data);
         // const response = await PaymentService
         if (response.success && response.data) {
-          setClientSecret(response.data.clientSecret);
+          setClientSecret(response.data.clientSecret ?? null);
           setPaymentId(response.data.paymentId);
 
           return true;
@@ -69,6 +69,9 @@ export function usePayment() {
   );
 
   return {
+    isLoading,
+    error,
+    paymentId,
     clientSecret,
     createPaymentIntent,
     confirmPayment,

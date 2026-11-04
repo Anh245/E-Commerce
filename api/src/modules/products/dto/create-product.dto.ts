@@ -4,6 +4,8 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsInt,
+  IsUrl,
   IsOptional,
   IsString,
   MaxLength,
@@ -47,7 +49,7 @@ export class CreateProductDto {
     example: 100,
     minimum: 0,
   })
-  @IsNumber()
+  @IsInt()
   @Min(0)
   @Type(() => Number)
   stock?: number;
@@ -68,6 +70,7 @@ export class CreateProductDto {
     required: false,
   })
   @IsString()
+  @IsUrl({ protocols: ['https'], require_protocol: true })
   @IsOptional()
   imageUrl: string;
 
@@ -78,7 +81,7 @@ export class CreateProductDto {
     required: true,
   })
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   categoryId: string;
 
   @ApiProperty({

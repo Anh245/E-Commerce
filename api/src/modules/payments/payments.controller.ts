@@ -15,6 +15,9 @@ import {
 //import { CreatePaymentIntentApiResponse } from './dto/payment-response.dto';
 import { CreatePaymentIntentDto } from './dto/create-payment-intent.dto';
 import { GetUser } from '../../commmon/decorators/get-user.decorator';
+import { RoleGuard } from '../../commmon/guards/role.guard';
+import { Roles } from '../../commmon/decorators/roles.decorator';
+import { Role } from '@prisma/client';
 import {
   CreatePaymentIntentApiResponseDto,
   PaymentApiResponseDto,
@@ -28,6 +31,14 @@ import { ConfirmPaymentDto } from './dto/confirm-payment.dto';
 @ApiBearerAuth('JWT-auth')
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
+
+  @Get('admin/all')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Danh sách thanh toán (chỉ admin)' })
+  findAllAdmin() {
+    return this.paymentsService.findAll();
+  }
 
   @Post('create-intent')
   @ApiOperation({

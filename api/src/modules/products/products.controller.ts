@@ -1,5 +1,6 @@
 import {
   Body,
+  BadRequestException,
   Controller,
   Delete,
   Get,
@@ -10,6 +11,8 @@ import {
   Post,
   Query,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import {
@@ -18,6 +21,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { RoleGuard } from '../../commmon/guards/role.guard';
@@ -27,14 +31,62 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { ProductResponseDto } from './dto/response-product.dto';
 import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  MAX_PRODUCT_IMAGE_BYTES,
+  ProductImagesService,
+} from './product-images.service';
 
 @ApiTags('products')
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly productImagesService: ProductImagesService,
+  ) {}
+
+  @Post(':id/image')
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @Roles(Role.ADMIN)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: MAX_PRODUCT_IMAGE_BYTES, files: 1, fields: 0 },
+    }),
+  )
+  @ApiBearerAuth('JWT-auth')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['file'],
+      properties: { file: { type: 'string', format: 'binary' } },
+    },
+  })
+  @ApiOperation({ summary: 'Tải ảnh sản phẩm lên Cloudinary (chỉ admin)' })
+  async uploadImage(
+    @Param('id') id: string,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    await this.productsService.findOne(id);
+    const image = await this.productImagesService.upload(file);
+    try {
+      return await this.productsService.update(id, {
+        imageUrl: image.imageUrl,
+      });
+    } catch (error) {
+      await this.productImagesService.discard(image.key);
+      throw error;
+    }
+  }
 
   //Create
   @Post()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: MAX_PRODUCT_IMAGE_BYTES, files: 1, fields: 10 },
+    }),
+  )
+  @ApiConsumes('application/json', 'multipart/form-data')
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   @ApiBearerAuth('JWT-auth')
@@ -59,8 +111,22 @@ export class ProductsController {
   })
   async create(
     @Body() createProductDto: CreateProductDto,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<ProductResponseDto> {
-    return await this.productsService.create(createProductDto);
+    if (!file && !createProductDto.imageUrl)
+      throw new BadRequestException('Cần cung cấp ảnh sản phẩm');
+    const image = file
+      ? await this.productImagesService.upload(file)
+      : undefined;
+    try {
+      return await this.productsService.create({
+        ...createProductDto,
+        ...(image && { imageUrl: image.imageUrl }),
+      });
+    } catch (error) {
+      if (image) await this.productImagesService.discard(image.key);
+      throw error;
+    }
   }
 
   //Get all product
@@ -118,6 +184,12 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @Roles(Role.ADMIN)
   @Patch(':id')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: MAX_PRODUCT_IMAGE_BYTES, files: 1, fields: 10 },
+    }),
+  )
+  @ApiConsumes('application/json', 'multipart/form-data')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Update a product (Admin Only)',
@@ -141,8 +213,21 @@ export class ProductsController {
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<ProductResponseDto> {
-    return this.productsService.update(id, updateProductDto);
+    if (file) await this.productsService.findOne(id);
+    const image = file
+      ? await this.productImagesService.upload(file)
+      : undefined;
+    try {
+      return await this.productsService.update(id, {
+        ...updateProductDto,
+        ...(image && { imageUrl: image.imageUrl }),
+      });
+    } catch (error) {
+      if (image) await this.productImagesService.discard(image.key);
+      throw error;
+    }
   }
 
   //Update product Stock

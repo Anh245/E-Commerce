@@ -9,6 +9,9 @@ Xem [hướng dẫn đóng góp](../docs/CONTRIBUTING.md) để thiết lập m�
 
 | Phương thức | Đường dẫn | Mã nguồn |
 |---|---|---|
+| `POST` | `/api/v1/products/:id/image` | [products.controller.ts](src/modules/products/products.controller.ts) |
+| `POST` | `/api/v1/payments/webhook` | [payments-webhook.controller.ts](src/modules/payments/payments-webhook.controller.ts) |
+| `GET` | `/api/v1/payments/admin/all` | [payments.controller.ts](src/modules/payments/payments.controller.ts) |
 | `GET` | `/api/v1` | [app.controller.ts](src/app.controller.ts) |
 | `POST` | `/api/v1/auth/register` | [auth.controller.ts](src/modules/auth/auth.controller.ts) |
 | `POST` | `/api/v1/auth/refresh` | [auth.controller.ts](src/modules/auth/auth.controller.ts) |

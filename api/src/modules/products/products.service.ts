@@ -32,6 +32,7 @@ export class ProductsService {
     const product = await this.prismaService.product.create({
       data: {
         ...createProductDto,
+        description: createProductDto.description ?? '',
         price: new Prisma.Decimal(createProductDto.price),
       },
       include: {
@@ -74,7 +75,10 @@ export class ProductsService {
     if (!existingProduct) {
       throw new NotFoundException('Product not found!');
     }
-    if (updateProductDto && updateProductDto.sku !== existingProduct.sku) {
+    if (
+      updateProductDto.sku !== undefined &&
+      updateProductDto.sku !== existingProduct.sku
+    ) {
       const skuTaken = await this.prismaService.product.findUnique({
         where: {
           sku: updateProductDto.sku,

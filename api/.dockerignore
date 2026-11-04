@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.git
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.log
+.agents
+.claude
+.cursor
+.windsurf

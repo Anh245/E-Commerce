@@ -71,3 +71,24 @@
   padding: 1rem;
   border-top: 1px solid var(--admin-border);
 }
+
+.editor {
+  width: min(560px, calc(100vw - 2rem));
+  max-height: 90vh;
+  margin: auto;
+  padding: 1.5rem;
+  border: 1px solid var(--admin-border);
+  border-radius: 12px;
+  background: var(--admin-bg, white);
+  color: var(--admin-text, #1e293b);
+  overflow-y: auto;
+
+  &::backdrop { background: rgb(0 0 0 / 45%); }
+  h2 { margin-bottom: 1rem; }
+  fieldset { border: 0; padding: 0; display: grid; gap: 1rem; }
+  label { display: grid; gap: 0.4rem; font-size: 0.875rem; }
+}
+
+.imagePreview { width: 160px; height: 160px; object-fit: contain; border-radius: 8px; }
+.editorError { color: #b91c1c; margin-top: 1rem; }
+.editorActions { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem; }

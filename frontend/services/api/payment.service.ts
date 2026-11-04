@@ -30,8 +30,8 @@ export const PaymentService = {
 
   confirmPayment: async (
     data: ConfirmPaymentRequest,
-  ): Promise<PaymentResponse> => {
-    const response = await apiClient.post<PaymentResponse>(
+  ): Promise<{ success: boolean; data: PaymentItem; message?: string }> => {
+    const response = await apiClient.post<{ success: boolean; data: PaymentItem; message?: string }>(
       "/payments/confirm",
       data,
     );
@@ -40,13 +40,13 @@ export const PaymentService = {
   },
 
   getMyPayments: async (): Promise<PaymentItem[]> => {
-    const response = await apiClient.get<PaymentItem[]>("/payments");
-    return Array.isArray(response.data) ? response.data : [];
+    const response = await apiClient.get<{ data: PaymentItem[] }>("/payments");
+    return response.data.data;
   },
 
   getAllPaymentsAdmin: async (): Promise<PaymentItem[]> => {
-    const response = await apiClient.get<PaymentItem[]>("/payments");
-    return Array.isArray(response.data) ? response.data : [];
+    const response = await apiClient.get<{ data: PaymentItem[] }>("/payments/admin/all");
+    return response.data.data;
   },
 };
 

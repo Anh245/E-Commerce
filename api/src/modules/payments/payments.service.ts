@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import Stripe from 'stripe';
@@ -19,151 +20,210 @@ export class PaymentsService {
     });
   }
 
-  async createPaymentIntent(
-    userId: string,
-    createPaymentIntentDto: CreatePaymentIntentDto,
-  ): Promise<{
-    success: boolean;
-    data: { clientSecret: string; paymentId: string };
-    messsage: string;
-  }> {
-    const { orderId, amount, currency = 'usd' } = createPaymentIntentDto;
-
+  async createPaymentIntent(userId: string, dto: CreatePaymentIntentDto) {
     const order = await this.prismaService.order.findFirst({
-      where: {
-        id: orderId,
-        userId,
-      },
+      where: { id: dto.orderId, userId },
     });
-
-    if (!order) {
-      throw new NotFoundException(`Order with ID ${orderId} not found`);
-    }
-
-    const existingPayment = await this.prismaService.payment.findFirst({
-      where: {
-        orderId,
-      },
+    if (!order) throw new NotFoundException('Order not found');
+    const completed = await this.prismaService.payment.findUnique({
+      where: { orderId: order.id },
     });
-
-    if (existingPayment && existingPayment.status == PaymentStatus.SUCCESS) {
-      throw new BadRequestException('payment already completed for this order');
-    }
-
-    const paymentIntent = await this.stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
-      currency,
-      metadata: { orderId, userId },
-    });
-
-    const payment = await this.prismaService.payment.create({
-      data: {
-        orderId,
-        userId,
-        amount,
-        currency,
-        status: PaymentStatus.PENDING,
-        paymentMethod: 'STRIPE',
-        transactionId: paymentIntent.id,
-      },
-    });
-
-    return {
-      success: true,
-      data: {
-        clientSecret: paymentIntent.client_secret!,
-        paymentId: payment.id,
-      },
-      messsage: 'Payment intent created successfully',
-    };
-  }
-
-  async confirmPayment(
-    confirmPaymentDto: ConfirmPaymentDto,
-    userId: string,
-  ): Promise<{
-    success: boolean;
-    data: PaymentResponseDto;
-    message: string;
-  }> {
-    const { paymentIntentId, orderId } = confirmPaymentDto;
-    const payment = await this.prismaService.payment.findFirst({
-      where: {
-        orderId,
-        userId,
-        transactionId: paymentIntentId,
-      },
-    });
-    if (!payment) {
-      throw new NotFoundException('Payment not found');
-    }
-
-    if (payment.status === PaymentStatus.SUCCESS) {
-      throw new BadRequestException('Payment already completed');
-    }
-
-    const paymentIntent =
-      await this.stripe.paymentIntents.retrieve(paymentIntentId);
-    if (paymentIntent.status !== 'succeeded') {
-      throw new BadRequestException('Payment not successful');
-    }
-
-    const [updatePayment] = await this.prismaService.$transaction([
-      this.prismaService.payment.update({
-        where: {
-          id: payment.id,
-        },
+    if (completed?.status === PaymentStatus.SUCCESS) {
+      return {
+        success: true,
         data: {
-          status: PaymentStatus.SUCCESS,
+          paid: true,
+          amount: Number(completed.amount),
+          paymentId: completed.id,
         },
-        select: {
-          id: true,
-          orderId: true,
-          userId: true,
-          amount: true,
-          currency: true,
-          status: true,
-          paymentMethod: true,
-          transactionId: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      }),
-      this.prismaService.order.update({
-        where: {
-          id: orderId,
-        },
-        data: {
-          status: 'PROCESSING',
-        },
-      }),
-    ]);
-
-    const order = await this.prismaService.order.findFirst({
-      where: {
-        id: orderId,
-      },
-    });
-
-    if (order?.cartId) {
-      await this.prismaService.cart.update({
-        where: {
-          id: order.cartId,
-        },
-        data: {
-          checkedOut: true,
+        message: 'Order already paid',
+      };
+    }
+    if (order.status !== 'PENDING')
+      throw new BadRequestException('Order is not awaiting payment');
+    const amount = new Prisma.Decimal(order.totalAmount);
+    const cents = amount.mul(100).toNumber();
+    if (!Number.isSafeInteger(cents) || cents < 50) {
+      throw new BadRequestException('USD order total must be at least 0.50');
+    }
+    // One local payment per order; client amount is deliberately ignored.
+    const payment = await this.prismaService.$transaction(async (tx) => {
+      const pending = await tx.order.updateMany({
+        where: { id: order.id, userId, status: 'PENDING' },
+        data: { status: 'PENDING' },
+      });
+      if (!pending.count)
+        throw new BadRequestException('Order is no longer awaiting payment');
+      return tx.payment.upsert({
+        where: { orderId: order.id },
+        update: {},
+        create: {
+          orderId: order.id,
+          userId,
+          amount,
+          currency: 'usd',
+          paymentMethod: 'STRIPE',
         },
       });
+    });
+    if (payment.status === PaymentStatus.SUCCESS)
+      throw new BadRequestException('Order already paid');
+    if (
+      !new Prisma.Decimal(payment.amount).equals(amount) ||
+      payment.currency !== 'usd'
+    ) {
+      throw new BadRequestException('Payment does not match order');
     }
-
+    // Do not replay an unresolved create beyond Stripe's idempotency retention window.
+    if (
+      !payment.transactionId &&
+      Date.now() - payment.createdAt.getTime() > 23 * 60 * 60 * 1000
+    ) {
+      throw new BadRequestException(
+        'Unresolved payment requires reconciliation before retry',
+      );
+    }
+    const intent = payment.transactionId
+      ? await this.stripe.paymentIntents.retrieve(payment.transactionId)
+      : await this.stripe.paymentIntents.create(
+          {
+            amount: cents,
+            currency: 'usd',
+            payment_method_types: ['card'],
+            metadata: { orderId: order.id, userId, paymentId: payment.id },
+          },
+          { idempotencyKey: 'payment-' + payment.id },
+        );
+    await this.prismaService.payment.update({
+      where: { id: payment.id },
+      data: { transactionId: intent.id },
+    });
+    if (intent.status === 'succeeded') {
+      await this.settlePayment(intent, userId);
+      return {
+        success: true,
+        data: { paid: true, amount: amount.toNumber(), paymentId: payment.id },
+        message: 'Order already paid',
+      };
+    }
+    if (intent.status === 'canceled' || !intent.client_secret) {
+      throw new BadRequestException(
+        'Payment intent is unavailable; contact support',
+      );
+    }
     return {
       success: true,
-      data: this.mapPaymentResponse(updatePayment),
-      message: 'Payment confirm successfully',
+      data: {
+        clientSecret: intent.client_secret,
+        paymentId: payment.id,
+        amount: amount.toNumber(),
+      },
+      message: 'Payment intent ready',
     };
   }
 
-  async findAll(userId: string): Promise<{
+  async confirmPayment(dto: ConfirmPaymentDto, userId: string) {
+    const payment = await this.prismaService.payment.findFirst({
+      where: {
+        orderId: dto.orderId,
+        userId,
+        transactionId: dto.paymentIntentId,
+      },
+    });
+    if (!payment) throw new NotFoundException('Payment not found');
+    const intent = await this.stripe.paymentIntents.retrieve(
+      dto.paymentIntentId,
+    );
+    return this.settlePayment(intent, userId);
+  }
+
+  async handleWebhook(
+    rawBody: Buffer | undefined,
+    signature: string | undefined,
+  ) {
+    const secret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!secret)
+      throw new ServiceUnavailableException('Stripe webhook is not configured');
+    if (!rawBody || !signature)
+      throw new BadRequestException('Missing webhook signature or body');
+    let event: Stripe.Event;
+    try {
+      event = this.stripe.webhooks.constructEvent(rawBody, signature, secret);
+    } catch {
+      throw new BadRequestException('Invalid webhook signature');
+    }
+    if (event.type === 'payment_intent.succeeded') {
+      const intent = event.data.object;
+      if (
+        intent.metadata.orderId &&
+        intent.metadata.userId &&
+        intent.metadata.paymentId
+      ) {
+        await this.settlePayment(intent, intent.metadata.userId);
+      }
+    }
+    return { received: true };
+  }
+
+  private async settlePayment(intent: Stripe.PaymentIntent, userId: string) {
+    if (intent.status !== 'succeeded')
+      throw new BadRequestException('Payment not successful');
+    const payment = await this.prismaService.payment.findFirst({
+      where: { orderId: intent.metadata.orderId, userId },
+    });
+    if (
+      !payment ||
+      intent.metadata.userId !== userId ||
+      intent.metadata.paymentId !== payment.id ||
+      (payment.transactionId && payment.transactionId !== intent.id) ||
+      intent.currency !== payment.currency ||
+      intent.amount !==
+        new Prisma.Decimal(payment.amount).mul(100).toNumber() ||
+      intent.amount_received !== intent.amount
+    ) {
+      throw new BadRequestException(
+        'Payment identity, amount or currency mismatch',
+      );
+    }
+    const updated = await this.prismaService.$transaction(async (tx) => {
+      // Claim settlement atomically; duplicate callbacks/webhooks do not regress order state.
+      const claimed = await tx.payment.updateMany({
+        where: { id: payment.id, status: { not: PaymentStatus.SUCCESS } },
+        data: { status: PaymentStatus.SUCCESS, transactionId: intent.id },
+      });
+      if (claimed.count) {
+        const order = await tx.order.findUniqueOrThrow({
+          where: { id: payment.orderId },
+        });
+        if (!new Prisma.Decimal(order.totalAmount).equals(payment.amount)) {
+          throw new BadRequestException(
+            'Order total changed; payment requires reconciliation',
+          );
+        }
+        const advanced = await tx.order.updateMany({
+          where: { id: order.id, userId, status: 'PENDING' },
+          data: { status: 'PROCESSING' },
+        });
+        if (!advanced.count)
+          throw new BadRequestException(
+            'Order cannot be fulfilled; payment requires reconciliation',
+          );
+        if (order.cartId)
+          await tx.cart.update({
+            where: { id: order.cartId },
+            data: { checkedOut: true },
+          });
+      }
+      return tx.payment.findUniqueOrThrow({ where: { id: payment.id } });
+    });
+    return {
+      success: true,
+      data: this.mapPaymentResponse(updated),
+      message: 'Payment confirmed',
+    };
+  }
+
+  async findAll(userId?: string): Promise<{
     success: boolean;
     data: PaymentResponseDto[];
     message: string;

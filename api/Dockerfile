@@ -2,7 +2,7 @@ FROM node:24.19.0-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 COPY prisma ./prisma/
 COPY . .
@@ -18,7 +18,7 @@ ENV NODE_ENV=production
 RUN apk add --no-cache dumb-init
 
 COPY package*.json ./
-RUN npm install --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma

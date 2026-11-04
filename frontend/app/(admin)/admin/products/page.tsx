@@ -5,6 +5,7 @@ import { Plus, Pencil, Trash2, Search, Filter } from "lucide-react";
 import { ProductService } from "@/services/api/product.Service";
 import type { Product } from "@/types/product.types";
 import styles from "./page.module.scss";
+import ProductEditor from "@/components/modules/admin/ProductEditor";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,19 +13,27 @@ export default function AdminProductsPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [meta, setMeta] = useState({ total: 0, totalPages: 1 });
+  const [editing, setEditing] = useState<Product | null | undefined>(undefined);
+  const [refresh, setRefresh] = useState(0);
+  const [loadError, setLoadError] = useState("");
   const limit = 10;
 
-  const fetchProducts = async () => {
+  const fetchProducts = () => {
     setIsLoading(true);
-    try {
-      const res = await ProductService.getProducts({ page, limit, search: search || undefined });
-      setProducts(res.data);
-      setMeta({ total: res.meta.total, totalPages: res.meta.totalPages });
-    } catch (e) { console.error(e); }
-    finally { setIsLoading(false); }
+    setRefresh((value) => value + 1);
   };
 
-  useEffect(() => { fetchProducts(); }, [page, search]);
+  useEffect(() => {
+    let active = true;
+    ProductService.getProducts({ page, limit, search: search || undefined }).then((res) => {
+      if (!active) return;
+      setProducts(res.data);
+      setMeta({ total: res.meta.total, totalPages: res.meta.totalPages });
+      setLoadError("");
+    }).catch(() => { if (active) setLoadError("Không tải được danh sách sản phẩm."); })
+      .finally(() => { if (active) setIsLoading(false); });
+    return () => { active = false; };
+  }, [page, search, refresh]);
 
   const getStockBadge = (stock: number) => {
     if (stock <= 0) return <span className="admin-badge badge-cancelled">Out of Stock</span>;
@@ -36,6 +45,7 @@ export default function AdminProductsPage() {
     <>
       <AdminHeader title="Products Management" subtitle={meta.total + " products total"} />
       <div className="admin-content">
+        {loadError && <p role="alert">{loadError} <button onClick={fetchProducts}>Thử lại</button></p>}
         <div className="admin-card" style={{ padding: 0, overflow: "hidden" }}>
           <div className={styles.toolbar}>
             <div className={styles.searchWrap}>
@@ -45,12 +55,12 @@ export default function AdminProductsPage() {
                 style={{ paddingLeft: "2.25rem" }}
                 placeholder="Search products..."
                 value={search}
-                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                onChange={(e) => { setIsLoading(true); setSearch(e.target.value); setPage(1); }}
               />
             </div>
             <div style={{ display: "flex", gap: "0.5rem" }}>
               <button className="admin-btn-ghost"><Filter size={15} /> Filter</button>
-              <button className="admin-btn-primary"><Plus size={15} /> Add Product</button>
+              <button className="admin-btn-primary" onClick={() => setEditing(null)}><Plus size={15} /> Thêm sản phẩm</button>
             </div>
           </div>
 
@@ -82,7 +92,7 @@ export default function AdminProductsPage() {
                     <td>{getStockBadge(p.stock)}</td>
                     <td>
                       <div style={{ display: "flex", gap: "0.375rem" }}>
-                        <button className="admin-btn-edit"><Pencil size={13} /></button>
+                        <button className="admin-btn-edit" aria-label={`Sửa sản phẩm và ảnh ${p.name}`} onClick={() => setEditing(p)}><Pencil size={13} /></button>
                         <button className="admin-btn-danger"><Trash2 size={13} /></button>
                       </div>
                     </td>
@@ -94,13 +104,14 @@ export default function AdminProductsPage() {
 
           {meta.totalPages > 1 && (
             <div className={styles.pagination}>
-              <button className="admin-btn-ghost" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>Prev</button>
+              <button className="admin-btn-ghost" onClick={() => { setIsLoading(true); setPage((p) => Math.max(1, p - 1)); }} disabled={page === 1}>Prev</button>
               <span style={{ fontSize: "0.85rem", color: "var(--admin-text-muted)" }}>{"Page " + page + " of " + meta.totalPages}</span>
-              <button className="admin-btn-ghost" onClick={() => setPage((p) => Math.min(meta.totalPages, p + 1))} disabled={page >= meta.totalPages}>Next</button>
+              <button className="admin-btn-ghost" onClick={() => { setIsLoading(true); setPage((p) => Math.min(meta.totalPages, p + 1)); }} disabled={page >= meta.totalPages}>Next</button>
             </div>
           )}
         </div>
       </div>
+      {editing !== undefined && <ProductEditor product={editing} onClose={() => setEditing(undefined)} onChanged={fetchProducts} />}
     </>
   );
 }
